@@ -4307,7 +4307,6 @@ dependencies = [
  "sea-orm",
  "sea-orm-migration",
  "serde_json",
- "sqlx 0.8.2",
  "tokio",
 ]
 
