@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Week 10-11 Fullstack",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

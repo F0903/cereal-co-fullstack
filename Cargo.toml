@@ -1,0 +1,28 @@
+[package]
+name = "week10-11-fullstack"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+members = [".", "migration"]
+
+[dependencies]
+#entity = { path = "entity" }
+migration = { path = "migration" } # depends on your needs
+
+serde_json = "1.0"
+tokio = { version = "1.42", features = ["full"] }
+rocket = { version = "0.5", features = ["json"] }
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls"] }
+rocket_auth = { version = "0.4", features = ["sqlx-mysql"] }
+sea-orm = { version = "1.1", features = [
+    "sqlx-mysql",
+    "runtime-tokio-rustls",
+    "macros",
+    "with-json",
+] }
+sea-orm-migration = { version = "1.1", features = [
+    "sqlx-mysql",
+    "runtime-tokio-rustls",
+] }
+dotenv_codegen = "0.15"
