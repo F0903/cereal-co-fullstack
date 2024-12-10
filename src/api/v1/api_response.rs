@@ -6,17 +6,12 @@ use rocket::{
 };
 use serde::Serialize;
 
-pub type ApiResult<T> = Result<ApiResponse<T>, ApiResponse<ErrorObject>>;
-
-impl<T> From<ApiResponse<T>> for ApiResult<T> {
-    fn from(value: ApiResponse<T>) -> Self {
-        Self::Ok(value)
-    }
-}
+#[derive(Serialize)]
+pub struct Error;
 
 #[derive(Serialize)]
-pub struct ErrorObject {
-    error: String,
+pub struct MessageObject {
+    message: String,
 }
 
 #[derive(Debug)]
@@ -25,22 +20,35 @@ pub struct ApiResponse<T> {
     status: Status,
 }
 
-impl ApiResponse<ErrorObject> {
-    fn err(message: impl Into<String>, status: Status) -> Self {
+impl ApiResponse<Error> {
+    fn err(status: Status) -> Self {
         Self {
-            json: Json(ErrorObject {
-                error: message.into(),
-            }),
+            json: Json(Error),
             status,
         }
     }
 
     pub fn bad_request() -> Self {
-        Self::err("bad request", Status::BadRequest)
+        Self::err(Status::BadRequest)
     }
 
     pub fn internal_error() -> Self {
-        Self::err("internal server error", Status::InternalServerError)
+        Self::err(Status::InternalServerError)
+    }
+}
+
+impl ApiResponse<MessageObject> {
+    fn message(message: impl Into<String>) -> Self {
+        Self {
+            json: Json(MessageObject {
+                message: message.into(),
+            }),
+            status: Status::Ok,
+        }
+    }
+
+    pub fn success() -> Self {
+        Self::message("success")
     }
 }
 
@@ -55,9 +63,12 @@ impl<T> ApiResponse<T> {
 
 impl<'r, 'o: 'r, T: serde::Serialize> Responder<'r, 'o> for ApiResponse<T> {
     fn respond_to(self, req: &'r Request) -> response::Result<'o> {
-        Response::build_from(self.json.respond_to(&req).unwrap())
-            .status(self.status)
-            .header(ContentType::JSON)
-            .ok()
+        match self.status.code {
+            200 /* OK */ => Response::build_from(self.json.respond_to(&req).unwrap())
+                .status(self.status)
+                .header(ContentType::JSON)
+                .ok(),
+            _ => Err(self.status),
+        }
     }
 }

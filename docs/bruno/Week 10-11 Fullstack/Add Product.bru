@@ -1,0 +1,22 @@
+meta {
+  name: Add Product
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8000/api/v1/add_product
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Test",
+    "description": "Test Desc",
+    "manufacturer": "Test Manufacturer",
+    "quantity": 5,
+    "price": 9,
+    "attributes": {}
+  }
+}

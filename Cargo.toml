@@ -4,9 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace]
-members = [".", "migration"]
+members = [".", "entity", "migration"]
 
 [dependencies]
+entity = { path = "entity" }
 migration = { path = "migration" }
 
 dotenv_codegen = "0.15"
