@@ -7,14 +7,13 @@ edition = "2021"
 members = [".", "migration"]
 
 [dependencies]
-#entity = { path = "entity" }
-migration = { path = "migration" } # depends on your needs
+migration = { path = "migration" }
 
-# TODO: fix this strange compile error
-serde_json = "1.0"
+dotenv_codegen = "0.15"
+serde = "1.0"
 tokio = { version = "1.42", features = ["full"] }
 rocket = { version = "0.5", features = ["json"] }
-rocket_auth = { version = "0.4", features = ["sqlx-mysql"] }
+sqlx = { version = "*", features = ["runtime-tokio-rustls"] }
 sea-orm = { version = "1.1", features = [
     "sqlx-mysql",
     "runtime-tokio-rustls",
@@ -25,4 +24,3 @@ sea-orm-migration = { version = "1.1", features = [
     "sqlx-mysql",
     "runtime-tokio-rustls",
 ] }
-dotenv_codegen = "0.15"

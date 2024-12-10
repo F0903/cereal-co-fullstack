@@ -17,6 +17,7 @@ impl MigrationTrait for Migration {
                     .col(string_len(Product::Manufacturer, 255))
                     .col(integer(Product::Quantity))
                     .col(decimal_len(Product::Price, 10, 2))
+                    .col(json_binary(Product::Attributes))
                     .col(timestamp(Product::CreatedAt))
                     .col(timestamp(Product::LastUpdatedAt))
                     .to_owned(),
@@ -40,6 +41,7 @@ enum Product {
     Manufacturer,
     Quantity,
     Price,
+    Attributes,
     CreatedAt,
     LastUpdatedAt,
 }
