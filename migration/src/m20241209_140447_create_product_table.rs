@@ -7,7 +7,7 @@ pub struct Migration;
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .create_table(
+            .create_table(timestamps(
                 Table::create()
                     .table(Product::Table)
                     .if_not_exists()
@@ -18,10 +18,8 @@ impl MigrationTrait for Migration {
                     .col(integer(Product::Quantity))
                     .col(decimal_len(Product::Price, 10, 2))
                     .col(json_binary(Product::Attributes))
-                    .col(timestamp(Product::CreatedAt))
-                    .col(timestamp(Product::LastUpdatedAt))
                     .to_owned(),
-            )
+            ))
             .await
     }
 
@@ -42,6 +40,4 @@ enum Product {
     Quantity,
     Price,
     Attributes,
-    CreatedAt,
-    LastUpdatedAt,
 }

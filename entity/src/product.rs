@@ -16,7 +16,7 @@ pub struct Model {
     pub price: Decimal,
     pub attributes: Json,
     pub created_at: DateTimeUtc,
-    pub last_updated_at: DateTimeUtc,
+    pub updated_at: DateTimeUtc,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

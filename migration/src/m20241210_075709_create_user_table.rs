@@ -7,7 +7,7 @@ pub struct Migration;
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .create_table(
+            .create_table(timestamps(
                 Table::create()
                     .table(User::Table)
                     .if_not_exists()
@@ -16,7 +16,7 @@ impl MigrationTrait for Migration {
                     .col(string(User::Username))
                     .col(string(User::Password))
                     .to_owned(),
-            )
+            ))
             .await
     }
 
