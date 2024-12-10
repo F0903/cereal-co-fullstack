@@ -9,5 +9,11 @@ mod products;
 //mod auth;
 
 pub fn get_routes() -> Vec<Route> {
-    routes![products::get_products, products::add_product]
+    routes![
+        products::add_product,
+        products::get_product,
+        products::get_products,
+        products::update_product,
+        products::delete_product
+    ]
 }

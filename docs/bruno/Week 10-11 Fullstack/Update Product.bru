@@ -1,0 +1,26 @@
+meta {
+  name: Update Product
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{SERVER_URL}}/api/v1/products/:id
+  body: json
+  auth: none
+}
+
+params:path {
+  id: 1
+}
+
+body:json {
+  {
+    "name": "Test 3",
+    "description": "Test 3 Desc",
+    "manufacturer": "Test 3 Manufacturer",
+    "quantity": 2,
+    "price": 9.91,
+    "attributes": {}
+  }
+}
