@@ -13,7 +13,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_auto(Product::Id))
                     .col(string_len(Product::Name, 255))
-                    .col(string(Product::Description))
+                    .col(text(Product::Description))
                     .col(string_len(Product::Manufacturer, 255))
                     .col(integer(Product::Quantity))
                     .col(decimal_len(Product::Price, 10, 2))
