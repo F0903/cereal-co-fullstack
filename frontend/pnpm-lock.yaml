@@ -8,9 +8,21 @@ importers:
 
   .:
     dependencies:
+      '@fontsource-variable/caveat':
+        specifier: ^5.1.0
+        version: 5.1.0
       '@fontsource-variable/roboto-flex':
         specifier: ^5.1.0
         version: 5.1.0
+      '@fontsource-variable/roboto-slab':
+        specifier: ^5.1.0
+        version: 5.1.0
+      '@fortawesome/free-solid-svg-icons':
+        specifier: ^6.7.1
+        version: 6.7.1
+      svelte-fa:
+        specifier: ^4.0.3
+        version: 4.0.3(svelte@5.10.1)
     devDependencies:
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0
@@ -184,8 +196,22 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@fontsource-variable/caveat@5.1.0':
+    resolution: {integrity: sha512-zLBtg14o5AHlJjsq7v4fpgot1XQDqJkMi9fAmbGO4rQHr9w5nxj9Zu3da85TyVP86tZ94rhFFeGhjMNvwgfaHw==}
+
   '@fontsource-variable/roboto-flex@5.1.0':
     resolution: {integrity: sha512-TwH8+uOwBqIjxtvTc+kp7ywyH7V7bDLbAXrEQg2SoCTJ6m2pn00x7ULioTTzDEvek+XpbqIf8gbKE1zlcONNGg==}
+
+  '@fontsource-variable/roboto-slab@5.1.0':
+    resolution: {integrity: sha512-yDXymBKjK3CPrtaS8WbT9kOIWeSl3N5xaW8odaXOPZk9vhbWe/fO9e4VUG8T7ZYRR+RoRtwNWZ7gE4a5lqEIIQ==}
+
+  '@fortawesome/fontawesome-common-types@6.7.1':
+    resolution: {integrity: sha512-gbDz3TwRrIPT3i0cDfujhshnXO9z03IT1UKRIVi/VEjpNHtSBIP2o5XSm+e816FzzCFEzAxPw09Z13n20PaQJQ==}
+    engines: {node: '>=6'}
+
+  '@fortawesome/free-solid-svg-icons@6.7.1':
+    resolution: {integrity: sha512-BTKc0b0mgjWZ2UDKVgmwaE0qt0cZs6ITcDgjrti5f/ki7aF5zs+N91V6hitGo3TItCFtnKg6cUVGdTmBFICFRg==}
+    engines: {node: '>=6'}
 
   '@jridgewell/gen-mapping@0.3.5':
     resolution: {integrity: sha512-IzL8ZoEDIBRWEzlCcRhOaCupYyN5gdIK+Q6fbFdPDg6HqX6jpkItn7DFIpW9LQzXG6Df9sA7+OKnq0qlz/GaQg==}
@@ -481,6 +507,11 @@ packages:
       svelte: ^4.0.0 || ^5.0.0-next.0
       typescript: '>=5.0.0'
 
+  svelte-fa@4.0.3:
+    resolution: {integrity: sha512-saZ8yACM0k9Aexey+2NXU1W0MBosU5lBsRgqFCJKM+Taw7d0HyimPaPAjmvY/Xkyi3UwEYL/Sdu1IZJv/p0Flw==}
+    peerDependencies:
+      svelte: ^4.0.0 || ^5.0.0
+
   svelte@5.10.1:
     resolution: {integrity: sha512-JOBw4VStdoP/Iw93vrzGAOUWdV4Gk8hCuprvTwjbdMZG3GyYxbLogR56XqrO2M7E6PifoPkwDphXu0s49R2wvw==}
     engines: {node: '>=18'}
@@ -627,7 +658,17 @@ snapshots:
   '@esbuild/win32-x64@0.24.0':
     optional: true
 
+  '@fontsource-variable/caveat@5.1.0': {}
+
   '@fontsource-variable/roboto-flex@5.1.0': {}
+
+  '@fontsource-variable/roboto-slab@5.1.0': {}
+
+  '@fortawesome/fontawesome-common-types@6.7.1': {}
+
+  '@fortawesome/free-solid-svg-icons@6.7.1':
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.7.1
 
   '@jridgewell/gen-mapping@0.3.5':
     dependencies:
@@ -903,6 +944,10 @@ snapshots:
       typescript: 5.7.2
     transitivePeerDependencies:
       - picomatch
+
+  svelte-fa@4.0.3(svelte@5.10.1):
+    dependencies:
+      svelte: 5.10.1
 
   svelte@5.10.1:
     dependencies:
