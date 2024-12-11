@@ -14,6 +14,7 @@ pub struct Model {
     pub quantity: i32,
     #[sea_orm(column_type = "Decimal(Some((10, 2)))")]
     pub price: Decimal,
+    pub image_url: Option<String>,
     pub attributes: Json,
     pub created_at: DateTimeUtc,
     pub updated_at: DateTimeUtc,

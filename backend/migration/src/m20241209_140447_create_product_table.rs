@@ -17,6 +17,7 @@ impl MigrationTrait for Migration {
                     .col(string_len(Product::Manufacturer, 255))
                     .col(integer(Product::Quantity))
                     .col(decimal_len(Product::Price, 10, 2))
+                    .col(string_null(Product::ImageUrl))
                     .col(json_binary(Product::Attributes))
                     .to_owned(),
             ))
@@ -39,5 +40,6 @@ enum Product {
     Manufacturer,
     Quantity,
     Price,
+    ImageUrl,
     Attributes,
 }
