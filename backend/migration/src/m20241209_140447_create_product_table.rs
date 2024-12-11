@@ -13,7 +13,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_auto(Product::Id))
                     .col(string_len(Product::Name, 255))
-                    .col(string_len(Product::Description, 255))
+                    .col(string(Product::Description))
                     .col(string_len(Product::Manufacturer, 255))
                     .col(integer(Product::Quantity))
                     .col(decimal_len(Product::Price, 10, 2))
@@ -21,7 +21,21 @@ impl MigrationTrait for Migration {
                     .col(json_binary(Product::Attributes))
                     .to_owned(),
             ))
-            .await
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx-name-manufacturer")
+                    .table(Product::Table)
+                    .col(Product::Name)
+                    .col(Product::Manufacturer)
+                    .unique()
+                    .to_owned(),
+            )
+            .await?;
+
+        Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {

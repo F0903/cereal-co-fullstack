@@ -13,7 +13,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_auto(User::Id))
                     .col(boolean(User::IsAdmin))
-                    .col(string(User::Username))
+                    .col(string_uniq(User::Username))
                     .col(string(User::Password))
                     .to_owned(),
             ))
