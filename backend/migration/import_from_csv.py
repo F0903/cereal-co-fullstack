@@ -2,9 +2,12 @@ import csv
 from dataclasses import dataclass
 import json
 import random
+from typing import Self
+import urllib.parse
 import lorem
 import mysql.connector as mysql
 import sys
+import urllib
 
 db = mysql.connect(host="localhost", user="root", password="root", database="week10")
 
@@ -13,13 +16,25 @@ TABLE_NAME = "product"
 
 @dataclass
 class Product:
-    name: str = "Default name"
-    description: str = lorem.paragraph()
-    manufacturer: str = "Cereal Co."
-    quantity: int = random.randint(1, 1000)
-    price: float = random.random() * 20
-    image_url: str = None
-    attributes: dict = None
+    name: str
+    description: str
+    manufacturer: str
+    quantity: int
+    price: float
+    image_url: str
+    attributes: dict
+
+    @classmethod
+    def semi_random(cls) -> Self:
+        return cls(
+            name="Default name",
+            description=lorem.paragraph(),
+            manufacturer="Cereal Co.",
+            quantity=random.randint(1, 1000),
+            price=random.random() * 20,
+            image_url=None,
+            attributes=None,
+        )
 
 
 def insert_into_db(product: Product):
@@ -70,7 +85,7 @@ def process_row(row: dict[str, str]):
         print("Row was type row. Ignoring...")
         return
 
-    product = Product()
+    product = Product.semi_random()
     extra_attributes = dict()
     for key, value in row.items():
         match key.lower():
@@ -81,7 +96,8 @@ def process_row(row: dict[str, str]):
     product.attributes = extra_attributes
 
     if not product.image_url:
-        product.image_url = f"/static/img/cereal/{product.name}"
+        normalized_name = urllib.parse.quote(product.name)
+        product.image_url = f"/static/img/cereal/{normalized_name}.jpg"
 
     insert_into_db(product)
 

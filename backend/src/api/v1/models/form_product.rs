@@ -11,5 +11,6 @@ pub struct FormProduct {
     pub manufacturer: String,
     pub quantity: i32,
     pub price: Decimal,
+    pub image_url: String,
     pub attributes: Json,
 }
