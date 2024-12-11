@@ -1,17 +1,19 @@
 <script lang="ts">
-    import ProductsWidget from "$lib/ProductsWidget.svelte";
+  import ProductCard from "$lib/ProductCard.svelte";
+  import type { PageData } from "./$types";
+
+  let { data }: { data: PageData } = $props();
 </script>
 
-<div class="widgets">
-    <ProductsWidget />
+<div class="products-container">
+  {#each data.products as product}
+    <ProductCard name={product.name} price="${product.price}" imageUrl="" />
+  {/each}
 </div>
 
 <style>
-    .widgets {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-
-        justify-content: center;
-    }
+  .products-container {
+    padding: 50px;
+    box-sizing: border-box;
+  }
 </style>

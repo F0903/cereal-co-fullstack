@@ -7,10 +7,12 @@ use dotenv_codegen::dotenv;
 use jsonwebtoken::{errors::ErrorKind, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use rocket::{
     http::Status,
-    request::{FromRequest, Outcome},
+    request::{self, FromRequest, Outcome},
     serde::{Deserialize, Serialize},
     Response,
 };
+
+//TODO
 
 const JWT_ALGORITHM: Algorithm = Algorithm::HS512;
 
@@ -25,71 +27,21 @@ pub struct JWT {
     pub claims: Claims,
 }
 
+#[rocket::async_trait]
 impl<'r> FromRequest<'r> for JWT {
     type Error = ApiResponse<ApiError>;
 
-    async fn from_request<'life0, 'async_trait>(
-        request: &'r rocket::Request<'life0>,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = rocket::request::Outcome<Self, Self::Error>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'r: 'async_trait,
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        let headers = request.headers();
+    async fn from_request(req: &'r request::Request<'_>) -> request::Outcome<Self, Self::Error> {
+        let headers = req.headers();
         let authorization = headers.get_one("Authorization");
 
         match authorization {
             Some(key) => match decode_jwt(key) {
                 Ok(claims) => Outcome::Success(JWT { claims }),
-                Err(err) => match err {
-                    ErrorKind::ExpiredSignature => {
-                        let response = Response {
-                            body: ResponseBody::Message(format!(
-                                "Error validating JWT token - Expired Token"
-                            )),
-                        };
-                        Outcome::Failure((
-                            Status::Unauthorized,
-                            NetworkResponse::Unauthorized(
-                                serde_json::to_string(&response).unwrap(),
-                            ),
-                        ))
-                    }
-                    ErrorKind::InvalidToken => {
-                        let response = Response {
-                            body: ResponseBody::Message(format!(
-                                "Error validating JWT token - Invalid Token"
-                            )),
-                        };
-                        Outcome::Failure((
-                            Status::Unauthorized,
-                            NetworkResponse::Unauthorized(
-                                serde_json::to_string(&response).unwrap(),
-                            ),
-                        ))
-                    }
-                    _ => {
-                        let response = Response {
-                            body: ResponseBody::Message(format!(
-                                "Error validating JWT token - {}",
-                                err
-                            )),
-                        };
-                        Outcome::Failure((
-                            Status::Unauthorized,
-                            NetworkResponse::Unauthorized(
-                                serde_json::to_string(&response).unwrap(),
-                            ),
-                        ))
-                    }
-                },
+                Err(_) => {
+                    let response = ApiResponse::unauthorized();
+                    Outcome::Error((Status::Unauthorized, response))
+                }
             },
             None => {
                 let response = ApiResponse::unauthorized();
