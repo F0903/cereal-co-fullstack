@@ -1,0 +1,15 @@
+meta {
+  name: Get Static File
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{SERVER_URL}}/static/:path
+  body: none
+  auth: none
+}
+
+params:path {
+  path: img/cereal/100%Bran.jpg
+}

@@ -8,6 +8,7 @@ const DATABASE_URL: &str = dotenv!("DATABASE_URL");
 const DB_NAME: LazyCell<&str> = LazyCell::new(|| DATABASE_URL.rsplit_once('/').unwrap().1);
 
 pub(super) async fn set_up_db() -> Result<DatabaseConnection, DbErr> {
+    println!("Conneting to '{}'...", DATABASE_URL);
     let db = Database::connect(DATABASE_URL).await?;
 
     // Create DB if it doesn't exist.

@@ -6,6 +6,7 @@ mod api;
 mod setup;
 mod utils;
 
+use rocket::fs::{FileServer, Options};
 use setup::set_up_db;
 use utils::pass_config::PassConfig;
 
@@ -16,5 +17,8 @@ async fn rocket() -> _ {
         Err(err) => panic!("{}", err),
     };
 
-    rocket::build().manage(db).pass_config(api::config)
+    rocket::build()
+        .manage(db)
+        .pass_config(api::config)
+        .mount("/static", FileServer::new("static", Options::Index))
 }
