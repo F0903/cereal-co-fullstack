@@ -3,6 +3,7 @@ extern crate rocket;
 extern crate dotenv_codegen;
 
 mod api;
+mod auth;
 mod setup;
 mod utils;
 

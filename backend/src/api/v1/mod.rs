@@ -5,6 +5,8 @@ mod api_result;
 mod models;
 mod products;
 
+pub use api_response::{ApiError, ApiResponse};
+
 //TODO
 //mod auth;
 

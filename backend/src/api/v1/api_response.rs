@@ -6,8 +6,8 @@ use rocket::{
 };
 use serde::Serialize;
 
-#[derive(Serialize)]
-pub struct Error;
+#[derive(Debug, Serialize)]
+pub struct ApiError;
 
 #[derive(Serialize)]
 pub struct MessageObject {
@@ -20,10 +20,10 @@ pub struct ApiResponse<T> {
     status: Status,
 }
 
-impl ApiResponse<Error> {
+impl ApiResponse<ApiError> {
     fn err(status: Status) -> Self {
         Self {
-            json: Json(Error),
+            json: Json(ApiError),
             status,
         }
     }
@@ -34,6 +34,10 @@ impl ApiResponse<Error> {
 
     pub fn internal_error() -> Self {
         Self::err(Status::InternalServerError)
+    }
+
+    pub fn unauthorized() -> Self {
+        Self::err(Status::Unauthorized)
     }
 }
 
