@@ -1,7 +1,6 @@
 <script lang="ts">
   import Button from "./Button.svelte";
   import ClickableImage from "./ClickableImage.svelte";
-  import Image from "./Image.svelte";
   import Spacer from "./Spacer.svelte";
 
   let { name, price, imageUrl } = $props();
@@ -28,6 +27,7 @@
     justify-self: end;
     align-self: end;
     margin-top: auto;
+    padding-top: 5px;
   }
 
   .name {
