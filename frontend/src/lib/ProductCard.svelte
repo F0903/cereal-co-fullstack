@@ -9,7 +9,7 @@
 <div class="card">
   <ClickableImage src={imageUrl} alt="Image of {name}" />
   <h2 class="name">{name}</h2>
-  <Spacer />
+  <Spacer --color="hsl(0, 0%, 25%)" />
   <div class="buy-container">
     <span class="price">{price}</span>
     <Button text="Add" />
@@ -51,7 +51,7 @@
     background-color: var(--secondary-color);
     width: 100%;
     padding: 10px;
-    border-radius: 15px;
+    border-radius: 25px;
     box-sizing: border-box;
   }
 </style>

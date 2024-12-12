@@ -21,7 +21,7 @@
     top: 50%;
     left: 50%;
     scale: 7;
-    color: rgba(102, 102, 102, 0.705);
+    color: hsla(0, 0%, 30%, 0.7);
 
     transition-property: opacity;
     transition-duration: 150ms;
@@ -29,8 +29,8 @@
   }
 
   .image-container:hover img {
-    scale: 1.2;
-    filter: blur(5px);
+    scale: 1.1;
+    filter: blur(7px);
   }
 
   img {
