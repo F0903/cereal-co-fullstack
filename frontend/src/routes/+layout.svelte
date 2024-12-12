@@ -1,18 +1,37 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+
   let { children } = $props();
+
+  async function onHomeClick() {
+    await goto("/");
+  }
 </script>
 
 <header>
-  <h1>Cereal Co.</h1>
+  <div
+    class="logo"
+    onclick={onHomeClick}
+    onkeydown={onHomeClick}
+    tabindex="0"
+    role="button"
+  >
+    <h1>Cereal Co.</h1>
+  </div>
 </header>
 {@render children()}
 
 <style>
+  .logo {
+    cursor: pointer;
+  }
+
   h1 {
     text-align: center;
     font-family: "Caveat Variable", cursive;
     font-size: 2.6em;
     font-weight: 100;
+    margin: 0px;
   }
 
   header {

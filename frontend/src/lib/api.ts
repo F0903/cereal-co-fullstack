@@ -2,6 +2,10 @@ import { PUBLIC_BACKEND_URL } from "$env/static/public";
 //import { getCookie } from "$lib/utils/cookie_utils";
 import { Product } from "./models/Product";
 
+export function getFullImageUrl(path: string): string {
+  return PUBLIC_BACKEND_URL + path;
+}
+
 export async function getAllProducts(): Promise<Product[]> {
   const resp = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/products`, {
     //credentials: "include",
@@ -21,16 +25,13 @@ export async function getAllProducts(): Promise<Product[]> {
 
 export async function getSingleProduct(id: number): Promise<Product> {
   const resp = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/products/${id}`, {
-    credentials: "include",
+    //credentials: "include",
   });
   if (!resp.ok) {
     throw new Error(`Response was not OK. Response was:\n${resp.statusText}`);
   }
 
-  // The API always wraps it in an array.
-  const products = await resp.json();
-  const product = products[0];
-
+  const product = await resp.json();
   return product;
 }
 

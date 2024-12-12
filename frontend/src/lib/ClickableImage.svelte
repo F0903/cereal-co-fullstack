@@ -2,10 +2,16 @@
   import Fa from "svelte-fa";
   import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-  let { src, alt } = $props();
+  let { src, alt, onclick } = $props();
 </script>
 
-<div class="image-container">
+<div
+  class="image-container"
+  {onclick}
+  onkeypress={onclick}
+  role="button"
+  tabindex="0"
+>
   <img {src} {alt} />
   <Fa icon={faMagnifyingGlass} class="clickable-image-icon" />
 </div>

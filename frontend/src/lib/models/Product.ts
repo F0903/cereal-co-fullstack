@@ -1,3 +1,6 @@
+interface ProductAttributes {
+  [key: string]: string;
+}
 export class Product {
   id!: number;
   name!: string;
@@ -6,7 +9,7 @@ export class Product {
   quantity!: number;
   price!: number;
   image_url!: string;
-  attributes!: JSON;
+  attributes!: ProductAttributes;
   created_at!: string;
   updated_at!: string;
 }

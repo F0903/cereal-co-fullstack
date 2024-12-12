@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { PUBLIC_BACKEND_URL } from "$env/static/public";
   import ProductCard from "$lib/ProductCard.svelte";
   import type { PageData } from "./$types";
 
@@ -7,13 +6,13 @@
 </script>
 
 <div class="products-container">
-  {#each data.products as product}
-    <ProductCard
-      name={product.name}
-      price="${product.price}"
-      imageUrl="{PUBLIC_BACKEND_URL}{product.image_url}"
-    />
-  {/each}
+  {#await data.productsTask}
+    <span>Loading products...</span>
+  {:then products}
+    {#each products as product}
+      <ProductCard {product} />
+    {/each}
+  {/await}
 </div>
 
 <style>

@@ -1,17 +1,28 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+  import { getFullImageUrl } from "./api";
   import Button from "./Button.svelte";
   import ClickableImage from "./ClickableImage.svelte";
+  import type { Product } from "./models/Product";
   import Spacer from "./Spacer.svelte";
 
-  let { name, price, imageUrl } = $props();
+  let { product }: { product: Product } = $props();
+
+  function onImageClick() {
+    goto(`/product/${product.id}`);
+  }
 </script>
 
 <div class="card">
-  <ClickableImage src={imageUrl} alt="Image of {name}" />
-  <h2 class="name">{name}</h2>
+  <ClickableImage
+    src={getFullImageUrl(product.image_url)}
+    alt="Image of {product.name}"
+    onclick={onImageClick}
+  />
+  <h2 class="name">{product.name}</h2>
   <Spacer --color="hsl(0, 0%, 25%)" />
   <div class="buy-container">
-    <span class="price">{price}</span>
+    <span class="price">${product.price}</span>
     <Button text="Add" />
   </div>
 </div>
