@@ -1,10 +1,19 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import CartView from "$lib/Cart.svelte";
+  import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+  import Fa from "svelte-fa";
 
   let { children } = $props();
 
+  let shoppingCartVisible = $state(false);
+
   async function onHomeClick() {
     await goto("/");
+  }
+
+  async function onShoppingCartClick() {
+    shoppingCartVisible = !shoppingCartVisible;
   }
 </script>
 
@@ -18,12 +27,61 @@
   >
     <h1>Cereal Co.</h1>
   </div>
+
+  <div
+    class="shopping-cart"
+    class:visible={shoppingCartVisible}
+    onclick={onShoppingCartClick}
+    onkeydown={onShoppingCartClick}
+    tabindex="0"
+    role="button"
+  >
+    <Fa icon={faShoppingCart} />
+  </div>
 </header>
+
+{#key shoppingCartVisible}
+  {#if shoppingCartVisible}
+    <div class="shopping-cart-view-container">
+      <CartView />
+    </div>
+  {/if}
+{/key}
+
 {@render children()}
 
 <style>
+  .shopping-cart-view-container {
+    position: fixed;
+    right: 15px;
+    top: var(--header-height);
+    z-index: 10;
+  }
+
+  .shopping-cart :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .shopping-cart.visible {
+    color: var(--primary-color);
+  }
+
+  .shopping-cart {
+    height: 40%;
+    aspect-ratio: 1;
+
+    cursor: pointer;
+
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translate(-50%, -50%);
+  }
+
   .logo {
     cursor: pointer;
+    text-align: center;
   }
 
   h1 {
@@ -32,15 +90,21 @@
     font-size: 2.6em;
     font-weight: 100;
     margin: 0px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   header {
+    --header-height: 75px;
+
+    position: relative;
+
     width: 100vw;
-    height: 75px;
+    height: var(--header-height);
     box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 
     background-color: var(--secondary-color);
 

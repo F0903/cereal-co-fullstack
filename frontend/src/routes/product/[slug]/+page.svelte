@@ -5,6 +5,7 @@
   import Spacer from "$lib/Spacer.svelte";
   import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
   import type { PageData } from "./$types";
+  import { addToCart } from "$lib/cart";
 
   let { data }: { data: PageData } = $props();
 
@@ -14,6 +15,10 @@
       : data.product.quantity <= 0
         ? "Empty"
         : "Limited";
+
+  function onAddClick() {
+    addToCart(data.product);
+  }
 </script>
 
 <div class="product-container">
@@ -53,6 +58,7 @@
       <Button
         text="Buy"
         prefixIcon={faShoppingCart}
+        onclick={onAddClick}
         --font-size="1.1em"
         --padding="7px"
         --border-radius="8px"

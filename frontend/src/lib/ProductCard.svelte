@@ -2,6 +2,7 @@
   import { goto } from "$app/navigation";
   import { getFullImageUrl } from "./api";
   import Button from "./Button.svelte";
+  import { addToCart } from "./cart";
   import ClickableImage from "./ClickableImage.svelte";
   import type { Product } from "./models/Product";
   import Spacer from "./Spacer.svelte";
@@ -10,6 +11,10 @@
 
   function onImageClick() {
     goto(`/product/${product.id}`);
+  }
+
+  function onAddClick() {
+    addToCart(product);
   }
 </script>
 
@@ -20,10 +25,10 @@
     onclick={onImageClick}
   />
   <h2 class="name">{product.name}</h2>
-  <Spacer --color="hsl(0, 0%, 25%)" />
+  <Spacer --color="hsl(0, 0%, 25%)" --margin-top="auto" />
   <div class="buy-container">
     <span class="price">${product.price}</span>
-    <Button text="Add" />
+    <Button text="Add" onclick={onAddClick} />
   </div>
 </div>
 
