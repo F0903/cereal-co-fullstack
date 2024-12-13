@@ -15,9 +15,9 @@
   }
 
   .image-container {
-    width: 100%;
-    height: 250px;
-    border-radius: 15px;
+    width: var(--width, 100%);
+    height: var(--height, 250px);
+    border-radius: var(--border-radius, 15px);
     overflow: hidden;
     box-sizing: border-box;
   }

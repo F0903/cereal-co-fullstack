@@ -31,17 +31,13 @@
     </div>
   </header>
 
-  {#key cartVisible}
-    {#if cartVisible}
-      <div
-        class="cart-container"
-        use:clickOutside
-        onclickoutside={() => (cartVisible = false)}
-      >
-        <Cart />
-      </div>
-    {/if}
-  {/key}
+  <div
+    class="cart-container"
+    use:clickOutside
+    onclickoutside={() => (cartVisible = false)}
+  >
+    <Cart bind:visible={cartVisible} />
+  </div>
 </div>
 
 {@render children()}
@@ -75,6 +71,7 @@
   }
 
   h1 {
+    user-select: none;
     text-align: center;
     font-family: "Caveat Variable", cursive;
     font-size: 2.6em;
