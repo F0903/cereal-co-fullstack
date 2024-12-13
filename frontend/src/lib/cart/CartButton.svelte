@@ -31,9 +31,6 @@
   }
 
   .shopping-cart {
-    height: 40%;
-    aspect-ratio: 1;
-
     cursor: pointer;
   }
 </style>

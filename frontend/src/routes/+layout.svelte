@@ -1,7 +1,9 @@
 <script lang="ts">
+  import "../fonts.css";
   import { goto } from "$app/navigation";
   import Cart from "$lib/cart/Cart.svelte";
   import CartButton from "$lib/cart/CartButton.svelte";
+  import { clickOutside } from "$lib/clickOutside.svelte";
 
   let { children } = $props();
 
@@ -23,15 +25,19 @@
     >
       <h1>Cereal Co.</h1>
     </div>
-  </header>
 
-  <div class="cart-button-container">
-    <CartButton bind:cartVisible />
-  </div>
+    <div class="cart-button-container">
+      <CartButton bind:cartVisible />
+    </div>
+  </header>
 
   {#key cartVisible}
     {#if cartVisible}
-      <div class="cart-container">
+      <div
+        class="cart-container"
+        use:clickOutside
+        onclickoutside={() => (cartVisible = false)}
+      >
         <Cart />
       </div>
     {/if}
@@ -41,11 +47,16 @@
 {@render children()}
 
 <style>
+  .header-container {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+  }
+
   .cart-container {
     position: fixed;
     right: 15px;
     top: var(--header-height);
-    z-index: 10;
   }
 
   .cart-button-container {
@@ -53,6 +64,9 @@
     top: 50%;
     right: 10px;
     transform: translate(-50%, -50%);
+
+    height: 45%;
+    aspect-ratio: 1;
   }
 
   .logo {
@@ -84,9 +98,7 @@
 
     background-color: var(--secondary-color);
 
-    box-shadow: 0px 1px 0px 0px hsl(0, 0%, 20%);
-
-    z-index: 99;
+    box-shadow: 0px 1px 25px 2px hsl(0, 0%, 10%);
   }
 
   :root {
@@ -99,82 +111,5 @@
     color: var(--tertiary-color);
 
     font-family: "Roboto Flex Variable", sans-serif;
-  }
-
-  /* roboto-flex-latin-wght-normal */
-  @font-face {
-    font-family: "Roboto Flex Variable";
-    font-style: oblique 0deg 10deg;
-    font-display: swap;
-    font-weight: 100 1000;
-    font-stretch: 25% 151%;
-    src: url(@fontsource-variable/roboto-flex/files/roboto-flex-latin-full-normal.woff2)
-      format("woff2-variations");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-      U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122,
-      U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-
-  /* roboto-flex-latin-ext-wght-normal */
-  @font-face {
-    font-family: "Roboto Flex Variable";
-    font-style: oblique 0deg 10deg;
-    font-display: swap;
-    font-weight: 100 1000;
-    font-stretch: 25% 151%;
-    src: url(@fontsource-variable/roboto-flex/files/roboto-flex-latin-ext-full-normal.woff2)
-      format("woff2-variations");
-    unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF,
-      U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-  }
-
-  /* caveat-latin-wght-normal */
-  @font-face {
-    font-family: "Caveat Variable";
-    font-style: normal;
-    font-display: auto;
-    font-weight: 400 700;
-    src: url(@fontsource-variable/caveat/files/caveat-latin-wght-normal.woff2)
-      format("woff2-variations");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-      U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122,
-      U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-
-  /* caveat-latin-ext-wght-normal */
-  @font-face {
-    font-family: "Caveat Variable";
-    font-style: normal;
-    font-display: auto;
-    font-weight: 400 700;
-    src: url(@fontsource-variable/caveat/files/caveat-latin-ext-wght-normal.woff2)
-      format("woff2-variations");
-    unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF,
-      U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-  }
-
-  /* roboto-slab-latin-wght-normal */
-  @font-face {
-    font-family: "Roboto Slab Variable";
-    font-style: normal;
-    font-display: auto;
-    font-weight: 100 900;
-    src: url(@fontsource-variable/roboto-slab/files/roboto-slab-latin-wght-normal.woff2)
-      format("woff2-variations");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-      U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122,
-      U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-
-  /* roboto-slab-latin-ext-wght-normal */
-  @font-face {
-    font-family: "Roboto Slab Variable";
-    font-style: normal;
-    font-display: auto;
-    font-weight: 100 900;
-    src: url(@fontsource-variable/roboto-slab/files/roboto-slab-latin-ext-wght-normal.woff2)
-      format("woff2-variations");
-    unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF,
-      U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
   }
 </style>
