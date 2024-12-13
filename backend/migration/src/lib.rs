@@ -2,6 +2,7 @@ pub use sea_orm_migration::prelude::*;
 
 mod m20241209_140447_create_product_table;
 mod m20241210_075709_create_user_table;
+mod m20241213_170736_create_order_tables;
 
 pub struct Migrator;
 
@@ -11,6 +12,7 @@ impl MigratorTrait for Migrator {
         vec![
             Box::new(m20241209_140447_create_product_table::Migration),
             Box::new(m20241210_075709_create_user_table::Migration),
+            Box::new(m20241213_170736_create_order_tables::Migration),
         ]
     }
 }

@@ -1,4 +1,4 @@
-use entity::product::ActiveModel;
+use crate::entities::product::ActiveModel;
 use sea_orm::{entity::prelude::Json, DeriveIntoActiveModel};
 use serde::Deserialize;
 use sqlx::types::Decimal;

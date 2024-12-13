@@ -1,4 +1,4 @@
-import type { Product } from "./models/Product";
+import type { Product } from "../models/Product";
 
 class Cart {
   expiryMillis!: number;

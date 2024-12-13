@@ -1,5 +1,15 @@
 # Running Migrator CLI
 
+## Importing CSV data
+
+To import CSV data, use the provided import_from_csv.py script as follows:
+
+```sh
+py import_from_csv.py **path_to_your_csv.csv**
+```
+
+## Sea-ORM Migration instructions
+
 - Generate a new migration file
 
   ```sh

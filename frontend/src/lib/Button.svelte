@@ -3,12 +3,12 @@
   import Fa from "svelte-fa";
 
   let {
-    text,
-    onclick = undefined,
+    text = undefined,
+    onclick,
     prefixIcon = undefined,
   }: {
-    text: string;
-    onclick?: () => void;
+    text?: string;
+    onclick: () => void;
     prefixIcon?: IconDefinition;
   } = $props();
 </script>

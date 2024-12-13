@@ -5,7 +5,7 @@
   import Spacer from "$lib/Spacer.svelte";
   import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
   import type { PageData } from "./$types";
-  import { addToCart } from "$lib/cart";
+  import { addToCart } from "$lib/cart/cart";
 
   let { data }: { data: PageData } = $props();
 

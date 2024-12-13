@@ -3,7 +3,7 @@ use super::{
     api_result::ApiResult,
     models::FormProduct,
 };
-use entity::{product::Model as ProductModel, Product};
+use crate::entities::{prelude::Product, product::Model as ProductModel};
 use rocket::{serde::json::Json, State};
 use sea_orm::{entity::*, query::*, DatabaseConnection};
 
@@ -79,10 +79,10 @@ pub async fn update_product(
 
     let mut full_new_product = new_product.into_active_model();
     // Set the id of the full product
-    full_new_product.set(<entity::Product as EntityTrait>::Column::Id, id.into());
+    full_new_product.set(<Product as EntityTrait>::Column::Id, id.into());
 
     Product::update(full_new_product)
-        .filter(<entity::Product as EntityTrait>::Column::Id.eq(id))
+        .filter(<Product as EntityTrait>::Column::Id.eq(id))
         .exec(db.inner())
         .await
         .map_err(|_| ApiResponse::bad_request())?;

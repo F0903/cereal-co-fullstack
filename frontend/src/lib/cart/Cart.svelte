@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { getCart } from "./cart";
-  import type { Product } from "./models/Product";
+  import type { Product } from "../models/Product";
 
   let cartProducts: Product[] = $state([]);
 
@@ -27,11 +27,16 @@
   .cart-view {
     padding: 10px 50px;
     background-color: var(--secondary-color);
+
     border-radius: 10px;
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
+
     box-shadow: 0px 0px 25px 10px rgba(0, 0, 0, 0.2);
     /* Allow shadow around but not above*/
     clip-path: inset(0px -50px -50px -50px);
+
+    min-height: 200px;
+    max-height: 50vh;
   }
 </style>

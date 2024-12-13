@@ -19,23 +19,17 @@ impl MigrationTrait for Migration {
                     .col(decimal_len(Product::Price, 10, 2))
                     .col(string_null(Product::ImageUrl))
                     .col(json_binary(Product::Attributes))
+                    .index(
+                        Index::create()
+                            .name("idx-name-manufacturer")
+                            .table(Product::Table)
+                            .col(Product::Name)
+                            .col(Product::Manufacturer)
+                            .unique(),
+                    )
                     .to_owned(),
             ))
-            .await?;
-
-        manager
-            .create_index(
-                Index::create()
-                    .name("idx-name-manufacturer")
-                    .table(Product::Table)
-                    .col(Product::Name)
-                    .col(Product::Manufacturer)
-                    .unique()
-                    .to_owned(),
-            )
-            .await?;
-
-        Ok(())
+            .await
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
@@ -46,7 +40,7 @@ impl MigrationTrait for Migration {
 }
 
 #[derive(DeriveIden)]
-enum Product {
+pub enum Product {
     Table,
     Id,
     Name,

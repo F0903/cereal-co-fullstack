@@ -4,6 +4,7 @@ extern crate dotenv_codegen;
 
 mod api;
 mod auth;
+mod entities;
 mod setup;
 mod utils;
 

@@ -1,78 +1,54 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import CartView from "$lib/Cart.svelte";
-  import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-  import Fa from "svelte-fa";
+  import Cart from "$lib/cart/Cart.svelte";
+  import CartButton from "$lib/cart/CartButton.svelte";
 
   let { children } = $props();
 
-  let shoppingCartVisible = $state(false);
+  let cartVisible = $state(false);
 
   async function onHomeClick() {
     await goto("/");
   }
-
-  async function onShoppingCartClick() {
-    shoppingCartVisible = !shoppingCartVisible;
-  }
 </script>
 
-<header>
-  <div
-    class="logo"
-    onclick={onHomeClick}
-    onkeydown={onHomeClick}
-    tabindex="0"
-    role="button"
-  >
-    <h1>Cereal Co.</h1>
-  </div>
-
-  <div
-    class="shopping-cart"
-    class:visible={shoppingCartVisible}
-    onclick={onShoppingCartClick}
-    onkeydown={onShoppingCartClick}
-    tabindex="0"
-    role="button"
-  >
-    <Fa icon={faShoppingCart} />
-  </div>
-</header>
-
-{#key shoppingCartVisible}
-  {#if shoppingCartVisible}
-    <div class="shopping-cart-view-container">
-      <CartView />
+<div class="header-container">
+  <header>
+    <div
+      class="logo"
+      onclick={onHomeClick}
+      onkeydown={onHomeClick}
+      tabindex="0"
+      role="button"
+    >
+      <h1>Cereal Co.</h1>
     </div>
-  {/if}
-{/key}
+  </header>
+
+  <div class="cart-button-container">
+    <CartButton bind:cartVisible />
+  </div>
+
+  {#key cartVisible}
+    {#if cartVisible}
+      <div class="cart-container">
+        <Cart />
+      </div>
+    {/if}
+  {/key}
+</div>
 
 {@render children()}
 
 <style>
-  .shopping-cart-view-container {
+  .cart-container {
     position: fixed;
     right: 15px;
     top: var(--header-height);
     z-index: 10;
   }
 
-  .shopping-cart :global(svg) {
-    width: 100%;
-    height: 100%;
-  }
-
-  .shopping-cart.visible {
-    color: var(--primary-color);
-  }
-
-  .shopping-cart {
-    height: 40%;
-    aspect-ratio: 1;
-
-    cursor: pointer;
-
+  .cart-button-container {
     position: absolute;
     top: 50%;
     right: 10px;
@@ -109,6 +85,8 @@
     background-color: var(--secondary-color);
 
     box-shadow: 0px 1px 0px 0px hsl(0, 0%, 20%);
+
+    z-index: 99;
   }
 
   :root {
