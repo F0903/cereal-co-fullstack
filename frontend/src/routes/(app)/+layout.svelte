@@ -2,7 +2,7 @@
   import { goto } from "$app/navigation";
   import Cart from "$lib/cart/CartView.svelte";
   import CartButton from "$lib/cart/CartButton.svelte";
-  import { clickOutside } from "$lib/clickOutside.svelte";
+  import { clickOutside } from "$lib/utils/clickOutside.svelte";
 
   let { children } = $props();
 
