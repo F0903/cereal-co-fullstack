@@ -7,7 +7,7 @@ export const load: PageLoad = async () => {
   // We can only get the cart (from localStorage) in a browser environment.
   const cart = browser ? getCart() : Cart.default();
 
-  if (cart.len() <= 0 && browser) {
+  if (cart.isEmpty() && browser) {
     await goto("/");
   }
 

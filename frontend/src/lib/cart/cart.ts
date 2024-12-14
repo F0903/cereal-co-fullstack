@@ -45,6 +45,7 @@ export class Cart {
   }
 
   len = () => this.data.items.length;
+  isEmpty = () => this.data.items.length <= 0;
 }
 
 const minuteToMillis = (minutes: number) => minutes * 60 * 1000;

@@ -41,7 +41,7 @@
         {/each}
       </div>
 
-      {#if cart.len() > 0}
+      {#if !cart.isEmpty()}
         <div class="checkout-button-container">
           <Button text="Checkout" onclick={onCheckoutClick} />
         </div>
