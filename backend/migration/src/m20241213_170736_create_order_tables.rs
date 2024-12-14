@@ -13,12 +13,12 @@ impl MigrationTrait for Migration {
                     .table(Order::Table)
                     .if_not_exists()
                     .col(pk_auto(Order::Id))
-                    .col(integer(Order::Total))
                     .col(text(Order::ShippingName))
                     .col(text(Order::ShippingAddress))
                     .col(text(Order::ShippingPhone))
                     .col(text(Order::ShippingMail))
                     .col(integer(Order::OrderItemsId))
+                    .col(decimal_len(Order::Total, 10, 2))
                     .to_owned(),
             ))
             .await?;

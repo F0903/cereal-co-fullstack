@@ -3,7 +3,7 @@
   import { getCart } from "./cart";
   import type { Product } from "../models/Product";
   import Image from "$lib/Image.svelte";
-  import { getFullImageUrl } from "$lib/api";
+  import { getFullImageUrl } from "$lib/api/utils";
   import Button from "$lib/Button.svelte";
   import { goto } from "$app/navigation";
   import Spacer from "$lib/Spacer.svelte";

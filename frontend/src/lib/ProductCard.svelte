@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { getFullImageUrl } from "./api";
+  import { getFullImageUrl } from "./api/utils";
   import Button from "./Button.svelte";
   import { addToCart } from "./cart/cart";
   import ClickableImage from "./ClickableImage.svelte";

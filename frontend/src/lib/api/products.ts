@@ -1,10 +1,6 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
 //import { getCookie } from "$lib/utils/cookie_utils";
-import { Product } from "./models/Product";
-
-export function getFullImageUrl(path: string): string {
-  return PUBLIC_BACKEND_URL + path;
-}
+import { Product } from "../models/Product";
 
 export async function getAllProducts(): Promise<Product[]> {
   const resp = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/products`, {

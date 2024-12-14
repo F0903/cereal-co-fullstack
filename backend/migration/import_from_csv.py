@@ -91,6 +91,8 @@ def process_row(row: dict[str, str]):
         match key.lower():
             case "name":
                 product.name = value
+            case "image":
+                product.image_url = f"/static/img/cereal/{urllib.parse.quote(value)}"
             case _:
                 extra_attributes[key] = value
     product.attributes = extra_attributes

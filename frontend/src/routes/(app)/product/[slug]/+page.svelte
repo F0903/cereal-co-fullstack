@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getFullImageUrl } from "$lib/api";
+  import { getFullImageUrl } from "$lib/api/utils";
   import Button from "$lib/Button.svelte";
   import Image from "$lib/Image.svelte";
   import Spacer from "$lib/Spacer.svelte";
@@ -10,9 +10,9 @@
   let { data }: { data: PageData } = $props();
 
   const stockStatus =
-    data.product.quantity > 25
+    parseInt(data.product.quantity) > 25
       ? "Good"
-      : data.product.quantity <= 0
+      : parseInt(data.product.quantity) <= 0
         ? "Empty"
         : "Limited";
 
