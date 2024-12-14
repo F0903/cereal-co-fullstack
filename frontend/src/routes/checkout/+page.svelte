@@ -10,9 +10,7 @@
   let { data }: { data: PageData } = $props();
 
   let totalPrice = $derived.by(() => {
-    const sum = data.products
-      .reduce<number>((a, b) => a + parseFloat(b.price), 0)
-      .toFixed(2);
+    const sum = data.cart.calcSum().toFixed(2);
     return sum;
   });
 
@@ -23,18 +21,18 @@
   <h1>Checkout</h1>
   <Spacer --margin-bottom="50px" --width="10%" />
 
-  {#each data.products as product}
+  {#each data.cart.getItems() as item}
     <div class="item">
       <Image
-        src={getFullImageUrl(product.image_url)}
-        alt="Image of {product.name}"
+        src={getFullImageUrl(item.product.image_url)}
+        alt="Image of {item.product.name}"
         --width="50px"
         --height="50px"
         --border-radius="7px"
       />
-      <h4>{product.name}</h4>
-      <span>{product.id}</span>
-      <span>{product.price}</span>
+      <h4>{item.product.name}</h4>
+      <span>{item.quantity}</span>
+      <span>{item.product.price}</span>
     </div>
   {/each}
   <Spacer --margin-bottom="50px" --width="10%" />

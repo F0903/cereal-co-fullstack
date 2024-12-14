@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { getCart } from "./cart";
-  import type { Product } from "../models/Product";
+  import { Cart, getCart } from "./cart";
   import Image from "$lib/Image.svelte";
   import { getFullImageUrl } from "$lib/api/utils";
   import Button from "$lib/Button.svelte";
@@ -10,7 +9,7 @@
 
   let { visible = $bindable(false) } = $props();
 
-  let cartProducts: Product[] = $state([]);
+  let cart: Cart | null = $state(null);
 
   async function onCheckoutClick() {
     visible = false;
@@ -18,32 +17,37 @@
   }
 
   onMount(() => {
-    cartProducts = getCart().products;
+    cart = getCart();
   });
 </script>
 
 {#key visible}
-  {#if visible}
+  {#if visible && cart != null}
     <div class="cart-view">
       <h3>Cart</h3>
       <Spacer --margin-top="0px" --margin-bottom="15px" --width="10%" />
       <div class="cart-items">
-        {#each cartProducts as product}
+        {#each cart.getItems() as item}
           <div class="cart-item">
             <Image
-              src={getFullImageUrl(product.image_url)}
-              alt="Image of {product.name}"
+              src={getFullImageUrl(item.product.image_url)}
+              alt="Image of {item.product.name}"
               --width="50px"
               --height="50px"
               --border-radius="7px"
             />
-            <h4>{product.name}</h4>
+            <h4>{item.product.name}</h4>
           </div>
         {/each}
       </div>
-      <div class="checkout-button-container">
-        <Button text="Checkout" onclick={onCheckoutClick} />
-      </div>
+
+      {#if cart.len() > 0}
+        <div class="checkout-button-container">
+          <Button text="Checkout" onclick={onCheckoutClick} />
+        </div>
+      {:else}
+        <span>it's a little empty up here...</span>
+      {/if}
     </div>
   {/if}
 {/key}
@@ -93,8 +97,8 @@
     /* Allow shadow around but not above*/
     clip-path: inset(0px -50px -50px -50px);
 
-    min-height: 200px;
-    height: var(--cart-max-height);
+    min-width: 200px;
+    max-height: var(--cart-max-height);
 
     display: flex;
     flex-direction: column;

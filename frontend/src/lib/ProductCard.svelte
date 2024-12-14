@@ -4,7 +4,7 @@
   import Button from "./Button.svelte";
   import { addToCart } from "./cart/cart";
   import ClickableImage from "./ClickableImage.svelte";
-  import type { Product } from "./models/Product";
+  import type { Product } from "./models/api/Product";
   import Spacer from "./Spacer.svelte";
 
   let { product }: { product: Product } = $props();
@@ -14,7 +14,7 @@
   }
 
   function onAddClick() {
-    addToCart(product);
+    addToCart({ product, quantity: 1 });
   }
 </script>
 

@@ -1,6 +1,6 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
 //import { getCookie } from "$lib/utils/cookie_utils";
-import { Product } from "../models/Product";
+import { Product } from "../models/api/Product";
 
 export async function getAllProducts(): Promise<Product[]> {
   const resp = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/products`, {

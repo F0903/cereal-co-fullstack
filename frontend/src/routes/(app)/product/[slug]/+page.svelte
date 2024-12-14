@@ -17,7 +17,7 @@
         : "Limited";
 
   function onAddClick() {
-    addToCart(data.product);
+    addToCart({ product: data.product, quantity: 1 });
   }
 </script>
 

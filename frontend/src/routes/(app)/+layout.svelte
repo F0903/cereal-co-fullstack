@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import Cart from "$lib/cart/Cart.svelte";
+  import Cart from "$lib/cart/CartView.svelte";
   import CartButton from "$lib/cart/CartButton.svelte";
   import { clickOutside } from "$lib/clickOutside.svelte";
 
