@@ -5,8 +5,16 @@
   import Spacer from "$lib/Spacer.svelte";
   import { faCheck } from "@fortawesome/free-solid-svg-icons";
   import type { PageData } from "./$types";
+  import InputField from "$lib/InputField.svelte";
 
   let { data }: { data: PageData } = $props();
+
+  let totalPrice = $derived.by(() => {
+    const sum = data.products
+      .reduce<number>((a, b) => a + parseFloat(b.price), 0)
+      .toFixed(2);
+    return sum;
+  });
 
   async function onCheckoutClick() {}
 </script>
@@ -14,6 +22,7 @@
 <div class="checkout">
   <h1>Checkout</h1>
   <Spacer --margin-bottom="50px" --width="10%" />
+
   {#each data.products as product}
     <div class="item">
       <Image
@@ -28,18 +37,36 @@
       <span>{product.price}</span>
     </div>
   {/each}
+  <Spacer --margin-bottom="50px" --width="10%" />
+
+  <form class="shipping-form">
+    <InputField name="Name" />
+  </form>
   <div class="checkout-price-container">
-    <span
-      >{data.products.reduce<number>(
-        (a, b) => a + parseFloat(b.price),
-        0
-      )}</span
-    >
-    <Button text="Checkout" prefixIcon={faCheck} onclick={onCheckoutClick} />
+    <span class="total-price">${totalPrice}</span>
+    <Spacer --margin-bottom="5px" />
+    <Button text="Purchase" prefixIcon={faCheck} onclick={onCheckoutClick} />
   </div>
 </div>
 
 <style>
+  .total-price {
+    font-size: 1.5em;
+    font-weight: 700;
+  }
+
+  .checkout-price-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--primary-color);
+
+    padding: 15px;
+    border-radius: 10px;
+  }
+
   .item {
     display: flex;
     flex-direction: row;

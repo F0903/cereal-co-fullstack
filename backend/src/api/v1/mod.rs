@@ -3,6 +3,7 @@ use rocket::Route;
 mod api_response;
 mod api_result;
 mod models;
+mod orders;
 mod products;
 
 pub use api_response::{ApiError, ApiResponse};
