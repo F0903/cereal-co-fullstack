@@ -1,0 +1,35 @@
+meta {
+  name: Add Order
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{SERVER_URL}}/api/v1/orders
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "shipping_name": "Fred",
+    "shipping_phone": "12345678",
+    "shipping_mail": "test@test.com",
+    "shipping_address": "Test Town, GB",
+    "total": 121.32,
+    "order_items": [
+      {
+        "product_id": 1,
+        "quantity": 2
+      }, 
+      {
+        "product_id": 3,
+        "quantity": 5
+      },
+      {
+        "product_id": 13,
+        "quantity": 1
+      }
+    ]
+  }
+}

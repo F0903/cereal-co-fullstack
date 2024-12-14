@@ -7,6 +7,7 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        // Order table
         manager
             .create_table(timestamps(
                 Table::create()
@@ -17,45 +18,36 @@ impl MigrationTrait for Migration {
                     .col(text(Order::ShippingAddress))
                     .col(text(Order::ShippingPhone))
                     .col(text(Order::ShippingMail))
-                    .col(integer(Order::OrderItemsId))
                     .col(decimal_len(Order::Total, 10, 2))
                     .to_owned(),
             ))
             .await?;
 
+        // OrderItem table
         manager
             .create_table(
                 Table::create()
                     .table(OrderItem::Table)
                     .if_not_exists()
-                    .col(pk_auto(OrderItem::Id))
                     .col(integer(OrderItem::OrderId))
                     .col(integer(OrderItem::ProductId))
                     .col(integer(OrderItem::Quantity))
                     .foreign_key(
                         ForeignKey::create()
+                            .from(OrderItem::Table, OrderItem::OrderId)
+                            .to(Order::Table, Order::Id),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
                             .from(OrderItem::Table, OrderItem::ProductId)
                             .to(Product::Table, Product::Id),
                     )
-                    .to_owned(),
-            )
-            .await?;
-
-        // Create many-to-many relationships
-        // We have to do this after the tables have been created, or it will error.
-        manager
-            .create_foreign_key(
-                ForeignKey::create()
-                    .from(Order::Table, Order::OrderItemsId)
-                    .to(OrderItem::Table, OrderItem::Id)
-                    .to_owned(),
-            )
-            .await?;
-        manager
-            .create_foreign_key(
-                ForeignKey::create()
-                    .from(OrderItem::Table, OrderItem::OrderId)
-                    .to(Order::Table, Order::Id)
+                    .primary_key(
+                        Index::create()
+                            .table(OrderItem::Table)
+                            .col(OrderItem::OrderId)
+                            .col(OrderItem::ProductId),
+                    )
                     .to_owned(),
             )
             .await?;
@@ -79,13 +71,11 @@ enum Order {
     ShippingPhone,
     ShippingMail,
     Total,
-    OrderItemsId,
 }
 
 #[derive(DeriveIden)]
 enum OrderItem {
     Table,
-    Id,
     OrderId,
     ProductId,
     Quantity,

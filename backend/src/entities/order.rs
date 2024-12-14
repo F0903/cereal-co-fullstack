@@ -8,7 +8,6 @@ use serde::{Deserialize, Serialize};
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub total: i32,
     #[sea_orm(column_type = "Text")]
     pub shipping_name: String,
     #[sea_orm(column_type = "Text")]
@@ -17,26 +16,30 @@ pub struct Model {
     pub shipping_phone: String,
     #[sea_orm(column_type = "Text")]
     pub shipping_mail: String,
-    pub order_items_id: i32,
+    #[sea_orm(column_type = "Decimal(Some((10, 2)))")]
+    pub total: Decimal,
     pub created_at: DateTimeUtc,
     pub updated_at: DateTimeUtc,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(
-        belongs_to = "super::order_item::Entity",
-        from = "Column::OrderItemsId",
-        to = "super::order_item::Column::Id",
-        on_update = "NoAction",
-        on_delete = "NoAction"
-    )]
+    #[sea_orm(has_many = "super::order_item::Entity")]
     OrderItem,
 }
 
 impl Related<super::order_item::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::OrderItem.def()
+    }
+}
+
+impl Related<super::product::Entity> for Entity {
+    fn to() -> RelationDef {
+        super::order_item::Relation::Product.def()
+    }
+    fn via() -> Option<RelationDef> {
+        Some(super::order_item::Relation::Order.def().rev())
     }
 }
 

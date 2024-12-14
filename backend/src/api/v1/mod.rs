@@ -17,6 +17,9 @@ pub fn get_routes() -> Vec<Route> {
         products::get_product,
         products::get_products,
         products::update_product,
-        products::delete_product
+        products::delete_product,
+        orders::add_order,
+        orders::get_order,
+        orders::get_orders_by_filter
     ]
 }

@@ -33,4 +33,13 @@ impl Related<super::order_item::Entity> for Entity {
     }
 }
 
+impl Related<super::order::Entity> for Entity {
+    fn to() -> RelationDef {
+        super::order_item::Relation::Order.def()
+    }
+    fn via() -> Option<RelationDef> {
+        Some(super::order_item::Relation::Product.def().rev())
+    }
+}
+
 impl ActiveModelBehavior for ActiveModel {}
