@@ -5,11 +5,12 @@ meta {
 }
 
 get {
-  url: {{SERVER_URL}}/api/v1/orders?mail=test@test.com
+  url: {{SERVER_URL}}/api/v1/orders?name=Jack
   body: none
   auth: none
 }
 
 params:query {
-  mail: test@test.com
+  name: Jack
+  ~mail: 
 }

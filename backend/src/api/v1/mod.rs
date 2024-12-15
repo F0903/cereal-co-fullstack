@@ -2,14 +2,12 @@ use rocket::Route;
 
 mod api_response;
 mod api_result;
+mod auth;
 mod models;
 mod orders;
 mod products;
 
 pub use api_response::{ApiError, ApiResponse};
-
-//TODO
-//mod auth;
 
 pub fn get_routes() -> Vec<Route> {
     routes![
@@ -20,6 +18,9 @@ pub fn get_routes() -> Vec<Route> {
         products::delete_product,
         orders::add_order,
         orders::get_order,
-        orders::get_orders_by_filter
+        orders::get_orders_by_filter,
+        auth::login,
+        auth::logout,
+        auth::signup,
     ]
 }

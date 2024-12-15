@@ -1,24 +1,22 @@
+use super::AUTH_COOKIE_NAME;
 use crate::{
     api::v1::{ApiError, ApiResponse},
     utils::generic_result::GenericResult,
 };
 use chrono::Utc;
 use dotenv_codegen::dotenv;
-use jsonwebtoken::{errors::ErrorKind, Algorithm, DecodingKey, EncodingKey, Header, Validation};
+use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use rocket::{
     http::Status,
     request::{self, FromRequest, Outcome},
     serde::{Deserialize, Serialize},
-    Response,
 };
-
-//TODO
 
 const JWT_ALGORITHM: Algorithm = Algorithm::HS512;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Claims {
-    pub subject_id: i32,
+    pub user_id: i32,
     exp: usize,
 }
 
@@ -27,40 +25,39 @@ pub struct JWT {
     pub claims: Claims,
 }
 
+// Implement request guard for JWT
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for JWT {
     type Error = ApiResponse<ApiError>;
 
     async fn from_request(req: &'r request::Request<'_>) -> request::Outcome<Self, Self::Error> {
-        let headers = req.headers();
-        let authorization = headers.get_one("Authorization");
+        let cookies = req.cookies();
+        let auth_cookie = match cookies.get(AUTH_COOKIE_NAME) {
+            Some(x) => x,
+            None => return Outcome::Error((Status::Unauthorized, ApiResponse::unauthorized())),
+        };
 
-        match authorization {
-            Some(key) => match decode_jwt(key) {
-                Ok(claims) => Outcome::Success(JWT { claims }),
-                Err(_) => {
-                    let response = ApiResponse::unauthorized();
-                    Outcome::Error((Status::Unauthorized, response))
-                }
-            },
-            None => {
-                let response = ApiResponse::unauthorized();
-                Outcome::Error((Status::Unauthorized, response))
-            }
-        }
+        let key = auth_cookie.value();
+
+        let claims = match decode_jwt_token(key) {
+            Ok(x) => x,
+            Err(_) => return Outcome::Error((Status::Unauthorized, ApiResponse::unauthorized())),
+        };
+
+        Outcome::Success(JWT { claims })
     }
 }
 
-pub fn encode_jwt(id: i32) -> GenericResult<String> {
+pub fn encode_jwt_token(user_id: i32) -> GenericResult<String> {
     let secret: &str = dotenv!("JWT_SECRET");
 
     let expiration = Utc::now()
-        .checked_add_signed(chrono::Duration::seconds(60))
+        .checked_add_signed(chrono::Duration::hours(6))
         .expect("Invalid timestamp")
         .timestamp();
 
     let claims = Claims {
-        subject_id: id,
+        user_id,
         exp: expiration as usize,
     };
 
@@ -74,10 +71,8 @@ pub fn encode_jwt(id: i32) -> GenericResult<String> {
     Ok(token)
 }
 
-pub fn decode_jwt(token_header: &str) -> Result<Claims, jsonwebtoken::errors::ErrorKind> {
+pub fn decode_jwt_token(token: &str) -> Result<Claims, jsonwebtoken::errors::ErrorKind> {
     let secret: &str = dotenv!("JWT_SECRET");
-
-    let token = token_header.trim_start_matches("Bearer").trim();
 
     let token = jsonwebtoken::decode::<Claims>(
         &token,

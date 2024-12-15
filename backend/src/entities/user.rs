@@ -11,7 +11,7 @@ pub struct Model {
     pub is_admin: i8,
     #[sea_orm(unique)]
     pub username: String,
-    pub password: String,
+    pub password_hash: String,
     pub created_at: DateTimeUtc,
     pub updated_at: DateTimeUtc,
 }

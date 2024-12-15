@@ -1,5 +1,7 @@
-mod form_product;
-mod order;
+mod orders;
+mod products;
+mod users;
 
-pub use form_product::*;
-pub use order::*;
+pub use orders::*;
+pub use products::*;
+pub use users::*;

@@ -1,3 +1,4 @@
+use ring::digest::{digest, SHA256};
 use sea_orm_migration::{prelude::*, schema::*};
 
 #[derive(DeriveMigrationName)]
@@ -14,10 +15,26 @@ impl MigrationTrait for Migration {
                     .col(pk_auto(User::Id))
                     .col(boolean(User::IsAdmin))
                     .col(string_uniq(User::Username))
-                    .col(string(User::Password))
+                    .col(string(User::PasswordHash))
                     .to_owned(),
             ))
-            .await
+            .await?;
+
+        manager
+            .exec_stmt(
+                Query::insert()
+                    .into_table(User::Table)
+                    .columns([User::IsAdmin, User::Username, User::PasswordHash])
+                    .values_panic([
+                        true.into(),
+                        "admin".into(),
+                        hex::encode(digest(&SHA256, b"admin").as_ref()).into(),
+                    ])
+                    .to_owned(),
+            )
+            .await?;
+
+        Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
@@ -33,5 +50,5 @@ enum User {
     Id,
     IsAdmin,
     Username,
-    Password,
+    PasswordHash,
 }

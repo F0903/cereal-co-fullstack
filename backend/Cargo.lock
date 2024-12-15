@@ -1632,6 +1632,8 @@ name = "migration"
 version = "0.1.0"
 dependencies = [
  "async-std",
+ "hex",
+ "ring",
  "sea-orm-migration",
 ]
 
@@ -3616,8 +3618,10 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "dotenv_codegen",
+ "hex",
  "jsonwebtoken",
  "migration",
+ "ring",
  "rocket",
  "sea-orm",
  "sea-orm-migration",
