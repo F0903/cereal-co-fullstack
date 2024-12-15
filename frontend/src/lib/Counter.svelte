@@ -4,11 +4,17 @@
 
   let {
     value = $bindable(0),
-    on_negative_callback = undefined,
-  }: { value?: number; on_negative_callback?: () => void } = $props();
+    on_value_changed = undefined,
+    on_negative_value_callback: on_negative_callback = undefined,
+  }: {
+    value?: number;
+    on_value_changed?: (newVal: number) => void;
+    on_negative_value_callback?: () => void;
+  } = $props();
 
   function onIncrementClick() {
     value += 1;
+    if (on_value_changed) on_value_changed(value);
   }
 
   function onDecrementClick() {
@@ -18,6 +24,7 @@
     }
 
     value -= 1;
+    if (on_value_changed) on_value_changed(value);
   }
 </script>
 
@@ -47,25 +54,27 @@
   .value {
     padding-left: 5px;
     padding-right: 5px;
+    user-select: none;
   }
 
   .minus-container {
-    border-left: 2px solid var(--secondary-color);
+    border-left: 2px solid var(--seperator-color, --default-seperator-color);
     padding-left: 5px;
   }
 
   .plus-container {
-    border-right: 2px solid var(--secondary-color);
+    border-right: 2px solid var(--seperator-color, --default-seperator-color);
     padding-right: 5px;
   }
 
   .counter-button:hover {
     cursor: pointer;
-    filter: brightness(1.2);
+    filter: brightness(1.5);
   }
 
   .counter {
-    background-color: var(--primary-color);
+    --seperator-color: var(--secondary-color);
+    background-color: var(--background-color, var(--primary-color));
     padding: 5px;
 
     display: flex;
@@ -75,5 +84,7 @@
     gap: 5px;
 
     font-size: 1.2em;
+
+    border-radius: 5px;
   }
 </style>

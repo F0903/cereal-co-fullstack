@@ -5,14 +5,14 @@
   import Spacer from "$lib/Spacer.svelte";
   import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
   import type { PageData } from "./$types";
-  import { addToCart } from "$lib/cart/cart";
+  import { addToCart } from "$lib/cart/localCartApi";
 
   let { data }: { data: PageData } = $props();
 
   const stockStatus =
-    parseInt(data.product.quantity) > 25
+    data.product.quantity > 25
       ? "Good"
-      : parseInt(data.product.quantity) <= 0
+      : data.product.quantity <= 0
         ? "Empty"
         : "Limited";
 

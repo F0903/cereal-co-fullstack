@@ -1,11 +1,7 @@
 import type { CartItem } from "$lib/models/CartProduct";
-
-const DEFAULT_EXPIRY_MINUTES = 720;
-
-type CartData = {
-  items: CartItem[];
-  expiryMillis: number;
-};
+import { dateOffset } from "$lib/utils/datetimeUtils";
+import { DEFAULT_CART_EXPIRY_MINUTES } from "./localCartApi";
+import type { CartData } from "./CartData";
 
 export class Cart {
   data: CartData;
@@ -17,12 +13,18 @@ export class Cart {
   static default(): Cart {
     return new Cart({
       items: [],
-      expiryMillis: dateOffset(DEFAULT_EXPIRY_MINUTES),
+      expiryMillis: dateOffset(DEFAULT_CART_EXPIRY_MINUTES),
     });
   }
 
   addItem(item: CartItem) {
     this.data.items.push(item);
+  }
+
+  removeItem(id: number) {
+    // This isn't exactly efficient, but I'm not sure there is a better way to do it in JS/TS.
+    const itemIndex = this.data.items.findIndex((x) => x.product.id == id);
+    this.data.items.splice(itemIndex, 1);
   }
 
   setExpiry(expiryMillis: number) {
@@ -39,56 +41,23 @@ export class Cart {
 
   calcSum(): number {
     return this.data.items.reduce<number>(
-      (a, b) => a + parseFloat(b.product.price) * b.quantity,
+      (a, b) => a + b.product.price * b.quantity,
       0
     );
   }
 
-  len = () => this.data.items.length;
-  isEmpty = () => this.data.items.length <= 0;
-}
+  len(): number {
+    if (!this.data.items) {
+      return 0;
+    }
 
-const minuteToMillis = (minutes: number) => minutes * 60 * 1000;
-const dateOffset = (minutes: number) => Date.now() + minuteToMillis(minutes);
-
-function readCart(expiresMinutes = DEFAULT_EXPIRY_MINUTES): Cart {
-  const rawCart = localStorage.getItem("cart");
-  return rawCart !== null ? new Cart(JSON.parse(rawCart)) : Cart.default();
-}
-
-export function getCart(expiresMinutes = DEFAULT_EXPIRY_MINUTES): Cart {
-  const cart = readCart(expiresMinutes);
-  console.log(cart);
-
-  if (cart.isExpired()) {
-    // Cart expired, clear it
-    localStorage.removeItem("cart");
-    return cart;
+    return this.data.items.length;
   }
 
-  return cart;
-}
-
-export function addToCart(
-  item: CartItem,
-  expiresMinutes = DEFAULT_EXPIRY_MINUTES
-) {
-  const cart = readCart(expiresMinutes);
-
-  let existingProduct = cart.data.items.find(
-    (x) => x.product.id == item.product.id
-  );
-
-  // If the product is already in the cart, we can just increment the quantity
-  if (existingProduct) {
-    console.log("existing product in cart, incrementing quantity...");
-    existingProduct.quantity += 1;
-  } else {
-    console.log("adding new product to cart...");
-    cart.addItem(item);
+  find(predicate: (item: CartItem) => boolean): CartItem | undefined {
+    if (!this.data.items) return undefined;
+    return this.data.items.find(predicate);
   }
 
-  cart.setExpiry(dateOffset(expiresMinutes));
-
-  localStorage.setItem("cart", JSON.stringify(cart));
+  isEmpty = () => this.len() <= 0;
 }

@@ -3,13 +3,14 @@ interface ProductAttributes {
 }
 
 // These models represent the "raw state (JSON)" of the object comming over the network.
+//
 export class Product {
-  id!: string;
+  id!: number;
   name!: string;
   description!: string;
   manufacturer!: string;
-  quantity!: string;
-  price!: string;
+  quantity!: number;
+  price!: number;
   image_url!: string;
   attributes!: ProductAttributes;
   created_at!: string;

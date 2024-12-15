@@ -2,7 +2,7 @@
   import { goto } from "$app/navigation";
   import { getFullImageUrl } from "./api/utils";
   import Button from "./Button.svelte";
-  import { addToCart } from "./cart/cart";
+  import { addToCart } from "./cart/localCartApi";
   import ClickableImage from "./ClickableImage.svelte";
   import type { Product } from "./models/api/Product";
   import Spacer from "./Spacer.svelte";

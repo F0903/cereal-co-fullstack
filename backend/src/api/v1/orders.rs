@@ -1,5 +1,5 @@
 use super::{
-    api_response::{ApiResponse, MessageObject},
+    api_response::{ApiResponse, IdObject},
     api_result::{ApiResult, ApiResultIntoError, ApiResultIntoOk},
     models::{FormOrder, OrderInfo},
 };
@@ -11,7 +11,7 @@ use sea_orm::{entity::*, DatabaseConnection, QueryFilter};
 pub async fn add_order(
     db: &State<DatabaseConnection>,
     order_form: Json<FormOrder>,
-) -> ApiResult<MessageObject> {
+) -> ApiResult<IdObject> {
     let order = order::ActiveModel {
         shipping_name: Set(order_form.shipping_name.clone()),
         shipping_address: Set(order_form.shipping_address.clone()),
@@ -42,7 +42,7 @@ pub async fn add_order(
         .await
         .map_err(|_| ApiResponse::internal_error())?;
 
-    ApiResponse::success().into_ok()
+    ApiResponse::ok(IdObject { id: order.id }).into_ok()
 }
 
 #[get("/orders/<id>")]

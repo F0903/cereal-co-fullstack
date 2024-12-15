@@ -11,7 +11,12 @@ pub struct ApiError;
 
 #[derive(Serialize)]
 pub struct MessageObject {
-    message: String,
+    pub message: String,
+}
+
+#[derive(Serialize)]
+pub struct IdObject {
+    pub id: i32,
 }
 
 #[derive(Debug)]

@@ -1,6 +1,7 @@
 import { browser } from "$app/environment";
 import { goto } from "$app/navigation";
-import { Cart, getCart } from "$lib/cart/cart";
+import { Cart } from "$lib/cart/Cart";
+import { getCart } from "$lib/cart/localCartApi";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = async () => {

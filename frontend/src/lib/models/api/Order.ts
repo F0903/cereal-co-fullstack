@@ -1,3 +1,4 @@
+// All of these are used be sent as json, so it doesn't matter that the fields are strings, as they will be anyway.
 class OrderItem {
   product_id!: number;
   quantity!: number;
