@@ -20,6 +20,7 @@ impl MigrationTrait for Migration {
             ))
             .await?;
 
+        // Add default admin user
         manager
             .exec_stmt(
                 Query::insert()
