@@ -5,7 +5,7 @@ use super::{
     ApiResponse,
 };
 use crate::{
-    auth::{encode_jwt_token, AUTH_COOKIE_NAME, JWT},
+    auth::{encode_jwt_token, AUTH_COOKIE_NAME, DEFAULT_TOKEN_EXPIRY_SECONDS, JWT},
     entities::user,
 };
 use argon2::{
@@ -15,6 +15,7 @@ use argon2::{
 use rocket::{
     http::{Cookie, CookieJar},
     serde::json::Json,
+    time::Duration,
     State,
 };
 use sea_orm::{entity::*, query::*, DatabaseConnection};
@@ -67,7 +68,11 @@ pub async fn login(
         .map_err(|_| ApiResponse::unauthorized())?;
 
     let token = encode_jwt_token(&user).map_err(|_| ApiResponse::internal_error())?;
-    cookies.add(Cookie::build((AUTH_COOKIE_NAME, token)).http_only(false /* turn this on later*/));
+    cookies.add(
+        Cookie::build((AUTH_COOKIE_NAME, token))
+            .max_age(Duration::seconds_f64(DEFAULT_TOKEN_EXPIRY_SECONDS as f64))
+            .http_only(true),
+    );
 
     ApiResponse::success().into_ok()
 }

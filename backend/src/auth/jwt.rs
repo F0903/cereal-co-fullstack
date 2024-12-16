@@ -1,10 +1,10 @@
-use super::AUTH_COOKIE_NAME;
+use super::{AUTH_COOKIE_NAME, DEFAULT_TOKEN_EXPIRY_SECONDS};
 use crate::{
     api::v1::{ApiError, ApiResponse},
     entities::user,
     utils::generic_result::GenericResult,
 };
-use chrono::Utc;
+use chrono::{TimeDelta, Utc};
 use dotenv_codegen::dotenv;
 use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use rocket::{
@@ -55,7 +55,7 @@ pub fn encode_jwt_token(user: &user::Model) -> GenericResult<String> {
     let secret: &str = dotenv!("JWT_SECRET");
 
     let expiration = Utc::now()
-        .checked_add_signed(chrono::Duration::hours(6))
+        .checked_add_signed(TimeDelta::seconds(DEFAULT_TOKEN_EXPIRY_SECONDS))
         .expect("Invalid timestamp")
         .timestamp();
 
