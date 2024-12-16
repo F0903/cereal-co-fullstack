@@ -8,7 +8,7 @@ export class UserForm {
 }
 
 export async function signup(userForm: UserForm) {
-  const resp = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/signup`, {
+  const resp = await fetchWithCreds(`${PUBLIC_BACKEND_URL}/api/v1/signup`, {
     method: "POST",
     body: JSON.stringify(userForm),
     headers: {
@@ -32,7 +32,7 @@ export async function login(userForm: UserForm) {
 }
 
 export async function logout() {
-  const resp = await fetch(`${PUBLIC_BACKEND_URL}/api/v1/logout`, {
+  const resp = await fetchWithCreds(`${PUBLIC_BACKEND_URL}/api/v1/logout`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
