@@ -4,6 +4,7 @@
   import CartButton from "$lib/cart/CartButton.svelte";
   import { clickOutside } from "$lib/utils/clickOutside.svelte";
   import UserButton from "$lib/AuthButton.svelte";
+  import { fly, slide } from "svelte/transition";
 
   let { data, children } = $props();
 
@@ -33,9 +34,14 @@
         onclickoutside={() => (cartVisible = false)}
       >
         <CartButton bind:cartVisible />
-        <div class="cart-container">
-          <Cart bind:visible={cartVisible} />
-        </div>
+        {#if cartVisible}
+          <div
+            class="cart-container"
+            transition:fly={{ duration: 450, y: -500 }}
+          >
+            <Cart bind:visible={cartVisible} />
+          </div>
+        {/if}
       </div>
 
       <div class="auth-button-container">
@@ -68,6 +74,7 @@
     position: absolute;
     right: 35px;
     top: var(--header-height);
+    z-index: -1;
   }
 
   .cart-button-container {

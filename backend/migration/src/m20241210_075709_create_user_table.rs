@@ -1,4 +1,7 @@
-use ring::digest::{digest, SHA256};
+use argon2::{
+    password_hash::{rand_core::OsRng, PasswordHasher, SaltString},
+    Argon2,
+};
 use sea_orm_migration::{prelude::*, schema::*};
 
 #[derive(DeriveMigrationName)]
@@ -20,6 +23,9 @@ impl MigrationTrait for Migration {
             ))
             .await?;
 
+        let argon2 = Argon2::default();
+        let salt = SaltString::generate(OsRng);
+
         // Add default admin user
         manager
             .exec_stmt(
@@ -29,7 +35,11 @@ impl MigrationTrait for Migration {
                     .values_panic([
                         true.into(),
                         "admin".into(),
-                        hex::encode(digest(&SHA256, b"admin").as_ref()).into(),
+                        argon2
+                            .hash_password(b"admin", &salt)
+                            .map_err(|_| DbErr::Custom("could not hash password".into()))?
+                            .to_string()
+                            .into(),
                     ])
                     .to_owned(),
             )

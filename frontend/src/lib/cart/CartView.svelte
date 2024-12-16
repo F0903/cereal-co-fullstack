@@ -28,61 +28,59 @@
   });
 </script>
 
-{#if visible && cart}
-  <div class="cart-view">
-    <Spacer
-      --margin-top="0px"
-      --margin-bottom="15px"
-      --width="100%"
-      --color="var(--primary-color)"
-    />
-    <div class="cart-items">
-      {#each cart.getItems() as item}
-        <div class="cart-item">
-          <Image
-            src={getFullImageUrl(item.product.image_url)}
-            alt="Image of {item.product.name}"
-            --width="50px"
-            --height="50px"
-            --border-radius="7px"
-          />
-          <h4 class="product-name">{item.product.name}</h4>
-          <Counter
-            value={item.quantity}
-            on_value_changed={(newVal) => {
-              // This is extremely inefficient
-              modifyCartItem(item.product.id, (itm) => (itm.quantity = newVal));
-              reloadCart();
-            }}
-            on_negative_value_callback={() => {
-              removeCartItem(item.product.id);
-              reloadCart(); // Explicitly reloading the cart like this isn't exactly pretty. But I have not figured out a way to make this better with stores and the current cart API.
-            }}
-            --background-color="var(--secondary-color)"
-            --seperator-color="var(--tertiary-color)"
-          />
-          <span class="price-text"
-            >${(item.product.price * item.quantity).toFixed(2)}</span
-          >
-        </div>
-      {/each}
-    </div>
-
-    {#if !cart.isEmpty()}
-      <div class="total-price-container">
-        <span class="total-text">Total:</span>
-        <span class="price-text">${cart.calcSum().toFixed(2)}</span>
+<div class="cart-view">
+  <Spacer
+    --margin-top="0px"
+    --margin-bottom="15px"
+    --width="100%"
+    --color="var(--primary-color)"
+  />
+  <div class="cart-items">
+    {#each cart.getItems() as item}
+      <div class="cart-item">
+        <Image
+          src={getFullImageUrl(item.product.image_url)}
+          alt="Image of {item.product.name}"
+          --width="50px"
+          --height="50px"
+          --border-radius="7px"
+        />
+        <h4 class="product-name">{item.product.name}</h4>
+        <Counter
+          value={item.quantity}
+          on_value_changed={(newVal) => {
+            // This is extremely inefficient
+            modifyCartItem(item.product.id, (itm) => (itm.quantity = newVal));
+            reloadCart();
+          }}
+          on_negative_value_callback={() => {
+            removeCartItem(item.product.id);
+            reloadCart(); // Explicitly reloading the cart like this isn't exactly pretty. But I have not figured out a way to make this better with stores and the current cart API.
+          }}
+          --background-color="var(--secondary-color)"
+          --seperator-color="var(--tertiary-color)"
+        />
+        <span class="price-text"
+          >${(item.product.price * item.quantity).toFixed(2)}</span
+        >
       </div>
-      <div class="checkout-button-container">
-        <Button text="Checkout" onclick={onCheckoutClick} />
-      </div>
-    {:else}
-      <span style="text-align: center; width: 100%;"
-        >it's a little empty up here...</span
-      >
-    {/if}
+    {/each}
   </div>
-{/if}
+
+  {#if !cart.isEmpty()}
+    <div class="total-price-container">
+      <span class="total-text">Total:</span>
+      <span class="price-text">${cart.calcSum().toFixed(2)}</span>
+    </div>
+    <div class="checkout-button-container">
+      <Button text="Checkout" onclick={onCheckoutClick} />
+    </div>
+  {:else}
+    <span style="text-align: center; width: 100%;"
+      >it's a little empty up here...</span
+    >
+  {/if}
+</div>
 
 <style>
   .price-text {

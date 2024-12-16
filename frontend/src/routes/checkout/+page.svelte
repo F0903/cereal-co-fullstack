@@ -10,6 +10,7 @@
   import { addOrder, Order, OrderItem } from "$lib/api/orders";
   import { goto } from "$app/navigation";
   import { clearCart } from "$lib/cart/localCartApi";
+  import Table from "$lib/Table.svelte";
 
   let { data }: { data: PageData } = $props();
 
@@ -51,20 +52,37 @@
   <h1>Checkout</h1>
   <Spacer --margin-bottom="50px" --width="10%" />
 
-  {#each data.cart.getItems() as item}
-    <div class="item">
-      <Image
-        src={getFullImageUrl(item.product.image_url)}
-        alt="Image of {item.product.name}"
-        --width="50px"
-        --height="50px"
-        --border-radius="7px"
-      />
-      <h4>{item.product.name}</h4>
-      <span>{item.quantity}</span>
-      <span>${item.product.price}</span>
-    </div>
-  {/each}
+  <Table>
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each data.cart.getItems() as item}
+        <tr>
+          <td>
+            <Image
+              src={getFullImageUrl(item.product.image_url)}
+              alt="Image of {item.product.name}"
+              --width="50px"
+              --height="50px"
+              --border-radius="7px"
+            />
+          </td>
+          <td>{item.product.name}</td>
+          <td>{item.quantity}</td>
+          <td>${item.product.price}</td>
+          <td>{item.quantity * item.product.price}</td>
+        </tr>
+      {/each}
+    </tbody>
+  </Table>
+
   <Spacer --margin-bottom="50px" --width="10%" />
 
   <form class="shipping-form" bind:this={form}>
@@ -106,14 +124,6 @@
 
     padding: 15px;
     border-radius: 10px;
-  }
-
-  .item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 100%;
   }
 
   .checkout {
