@@ -9,42 +9,65 @@ use crate::{
     entities::user,
 };
 use ring::digest::{digest, SHA256};
-use rocket::{http::CookieJar, serde::json::Json, State};
-use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
+use rocket::{
+    http::{Cookie, CookieJar},
+    serde::json::Json,
+    State,
+};
+use sea_orm::{entity::*, query::*, DatabaseConnection};
 
-#[post("/signup", format = "json", data = "<data>")]
-pub async fn signup(data: Json<UserForm>) -> ApiResult<MessageObject> {
-    //TODO
+#[post("/signup", format = "json", data = "<user_form>")]
+pub async fn signup(
+    db: &State<DatabaseConnection>,
+    user_form: Json<UserForm>,
+) -> ApiResult<MessageObject> {
+    let user_model = user::ActiveModel {
+        is_admin: Set(false.into()),
+        mail: Set(user_form.mail.to_ascii_lowercase()),
+        password_hash: Set(hex::encode(digest(
+            &SHA256,
+            user_form.password_plain.as_bytes(),
+        ))),
+        ..Default::default()
+    };
+
+    user::Entity::insert(user_model)
+        .exec(db.inner())
+        .await
+        .map_err(|_| ApiResponse::internal_error())?;
+
     ApiResponse::success().into_ok()
 }
 
-#[post("/login", format = "json", data = "<data>")]
+#[post("/login", format = "json", data = "<user_form>")]
 pub async fn login(
     db: &State<DatabaseConnection>,
-    data: Json<UserForm>,
+    user_form: Json<UserForm>,
     cookies: &CookieJar<'_>,
 ) -> ApiResult<MessageObject> {
     let user = user::Entity::find()
-        .filter(user::Column::Username.eq(&data.username))
+        .filter(user::Column::Mail.eq(&user_form.mail))
         .one(db.inner())
         .await
         .map_err(|_| ApiResponse::unauthorized())?
         .ok_or(ApiResponse::unauthorized())?;
 
-    let hashed_password = hex::encode(digest(&SHA256, data.password_plain.as_bytes()));
-
+    // Be aware that SHA256 is not optimal for this.
+    let hashed_password = hex::encode(digest(&SHA256, user_form.password_plain.as_bytes()));
     if hashed_password != user.password_hash {
         return ApiResponse::unauthorized().into_error();
     }
 
-    let token = encode_jwt_token(user.id).map_err(|_| ApiResponse::internal_error())?;
-    cookies.add((AUTH_COOKIE_NAME, token));
+    let token = encode_jwt_token(&user).map_err(|_| ApiResponse::internal_error())?;
+    cookies.add(Cookie::build((AUTH_COOKIE_NAME, token)).http_only(false /* turn this on later*/));
 
     ApiResponse::success().into_ok()
 }
 
-#[get("/logout")]
+#[post("/logout")]
 pub async fn logout(_jwt: JWT, cookies: &CookieJar<'_>) -> ApiResult<MessageObject> {
-    cookies.remove(AUTH_COOKIE_NAME);
+    println!("{:?}", _jwt);
+    // To logout, we simply tell the client to remove the cookie. Although be aware that the token is still valid until expiry.
+    cookies.remove(Cookie::build(AUTH_COOKIE_NAME));
     ApiResponse::success().into_ok()
 }

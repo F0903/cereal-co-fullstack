@@ -33,12 +33,17 @@
     align-items: center;
     gap: 5px;
 
-    background-color: var(--quaternary-color);
+    background-color: var(--background-color, var(--quaternary-color));
     color: hsl(0, 0%, 85%);
     font-family: "Roboto Flex Variable", sans-serif;
     font-size: var(--font-size, 1.1em);
     font-weight: 600;
     border-radius: var(--border-radius, 15px);
     padding: var(--padding, 10px);
+    border: var(--border);
+    height: var(--height);
+    width: var(--width);
+
+    box-sizing: border-box;
   }
 </style>

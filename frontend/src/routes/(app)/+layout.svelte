@@ -3,8 +3,9 @@
   import Cart from "$lib/cart/CartView.svelte";
   import CartButton from "$lib/cart/CartButton.svelte";
   import { clickOutside } from "$lib/utils/clickOutside.svelte";
+  import UserButton from "$lib/AuthButton.svelte";
 
-  let { children } = $props();
+  let { data, children } = $props();
 
   let cartVisible = $state(false);
 
@@ -25,18 +26,23 @@
       <h1>Cereal Co.</h1>
     </div>
 
-    <div class="cart-button-container">
-      <CartButton bind:cartVisible />
+    <div class="buttons-container">
+      <div
+        class="cart-button-container"
+        use:clickOutside
+        onclickoutside={() => (cartVisible = false)}
+      >
+        <CartButton bind:cartVisible />
+        <div class="cart-container">
+          <Cart bind:visible={cartVisible} />
+        </div>
+      </div>
+
+      <div class="auth-button-container">
+        <UserButton loggedIn={data.loggedIn} />
+      </div>
     </div>
   </header>
-
-  <div
-    class="cart-container"
-    use:clickOutside
-    onclickoutside={() => (cartVisible = false)}
-  >
-    <Cart bind:visible={cartVisible} />
-  </div>
 </div>
 
 {@render children()}
@@ -48,19 +54,24 @@
     z-index: 99;
   }
 
+  .buttons-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    gap: 25px;
+    float: right;
+    box-sizing: border-box;
+    padding: 10px;
+  }
+
   .cart-container {
-    position: fixed;
-    right: 15px;
+    position: absolute;
+    right: 35px;
     top: var(--header-height);
   }
 
   .cart-button-container {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translate(-50%, -50%);
-
-    height: 45%;
+    padding: 10px;
     aspect-ratio: 1;
   }
 
@@ -90,6 +101,7 @@
 
     width: 100vw;
     height: var(--header-height);
+    padding: 0px 15px;
     box-sizing: border-box;
 
     background-color: var(--secondary-color);

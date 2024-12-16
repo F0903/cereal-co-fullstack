@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { FullAutoFill } from "svelte/elements";
+  import type { FullAutoFill, HTMLInputTypeAttribute } from "svelte/elements";
 
   let {
     name,
@@ -8,7 +8,7 @@
     has_input_error = false,
   }: {
     name: string;
-    input_type?: string;
+    input_type?: HTMLInputTypeAttribute;
     autocomplete?: FullAutoFill;
     has_input_error?: boolean;
   } = $props();
@@ -44,8 +44,14 @@
     padding-bottom: 7px;
   }
 
-  .input-field.error {
-    border-color: var(--error-color);
+  .input-field.error label,
+  .input-field:has(input:invalid) {
+    color: var(--error-color, hsl(0, 45%, 45%));
+  }
+
+  .input-field.error,
+  .input-field:has(input:invalid) {
+    border-left: 3px solid var(--error-color, hsl(0, 45%, 45%));
   }
 
   .input-field {

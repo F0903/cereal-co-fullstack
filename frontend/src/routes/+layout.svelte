@@ -12,6 +12,7 @@
     --secondary-color: hsl(0, 0%, 20%);
     --tertiary-color: hsl(0, 0%, 55%);
     --quaternary-color: hsl(231, 48%, 36%);
+    --error-color: hsl(0, 45%, 45%);
 
     background-color: var(--primary-color);
     color: var(--tertiary-color);

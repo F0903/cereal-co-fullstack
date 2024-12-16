@@ -5,7 +5,7 @@ use super::{
 };
 use crate::entities::{order, order_item};
 use rocket::{serde::json::Json, State};
-use sea_orm::{entity::*, DatabaseConnection, QueryFilter};
+use sea_orm::{entity::*, query::*, DatabaseConnection};
 
 #[post("/orders", format = "json", data = "<order_form>")]
 pub async fn add_order(

@@ -14,7 +14,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_auto(User::Id))
                     .col(boolean(User::IsAdmin))
-                    .col(string_uniq(User::Username))
+                    .col(string_uniq(User::Mail))
                     .col(string(User::PasswordHash))
                     .to_owned(),
             ))
@@ -25,7 +25,7 @@ impl MigrationTrait for Migration {
             .exec_stmt(
                 Query::insert()
                     .into_table(User::Table)
-                    .columns([User::IsAdmin, User::Username, User::PasswordHash])
+                    .columns([User::IsAdmin, User::Mail, User::PasswordHash])
                     .values_panic([
                         true.into(),
                         "admin".into(),
@@ -50,6 +50,6 @@ enum User {
     Table,
     Id,
     IsAdmin,
-    Username,
+    Mail,
     PasswordHash,
 }

@@ -1,6 +1,7 @@
 use super::AUTH_COOKIE_NAME;
 use crate::{
     api::v1::{ApiError, ApiResponse},
+    entities::user,
     utils::generic_result::GenericResult,
 };
 use chrono::Utc;
@@ -16,8 +17,10 @@ const JWT_ALGORITHM: Algorithm = Algorithm::HS512;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Claims {
-    pub user_id: i32,
-    exp: usize,
+    pub sub: i32,
+    pub is_admin: bool,
+    exp: i64,
+    iat: i64,
 }
 
 #[derive(Debug)]
@@ -25,7 +28,7 @@ pub struct JWT {
     pub claims: Claims,
 }
 
-// Implement request guard for JWT
+// Request guard for JWT that requires an Auth cookie.
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for JWT {
     type Error = ApiResponse<ApiError>;
@@ -48,7 +51,7 @@ impl<'r> FromRequest<'r> for JWT {
     }
 }
 
-pub fn encode_jwt_token(user_id: i32) -> GenericResult<String> {
+pub fn encode_jwt_token(user: &user::Model) -> GenericResult<String> {
     let secret: &str = dotenv!("JWT_SECRET");
 
     let expiration = Utc::now()
@@ -57,8 +60,10 @@ pub fn encode_jwt_token(user_id: i32) -> GenericResult<String> {
         .timestamp();
 
     let claims = Claims {
-        user_id,
-        exp: expiration as usize,
+        sub: user.id,
+        is_admin: user.is_admin != 0,
+        exp: expiration,
+        iat: Utc::now().timestamp(),
     };
 
     let header = Header::new(JWT_ALGORITHM);

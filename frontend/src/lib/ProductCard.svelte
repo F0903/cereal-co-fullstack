@@ -1,10 +1,10 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import type { Product } from "./api/products";
   import { getFullImageUrl } from "./api/utils";
   import Button from "./Button.svelte";
   import { addToCart } from "./cart/localCartApi";
   import ClickableImage from "./ClickableImage.svelte";
-  import type { Product } from "./models/api/Product";
   import Spacer from "./Spacer.svelte";
 
   let { product }: { product: Product } = $props();

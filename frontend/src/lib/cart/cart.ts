@@ -1,7 +1,12 @@
-import type { CartItem } from "$lib/models/CartProduct";
 import { dateOffset } from "$lib/utils/datetimeUtils";
 import { DEFAULT_CART_EXPIRY_MINUTES } from "./localCartApi";
 import type { CartData } from "./CartData";
+import type { Product } from "$lib/api/products";
+
+export class CartItem {
+  product!: Product;
+  quantity!: number;
+}
 
 export class Cart {
   data: CartData;

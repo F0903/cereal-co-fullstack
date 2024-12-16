@@ -7,7 +7,7 @@
   import type { PageData } from "./$types";
   import InputField from "$lib/InputField.svelte";
   import { assertNotNull } from "$lib/utils/typeUtils";
-  import { addOrder } from "$lib/api/orders";
+  import { addOrder, Order, OrderItem } from "$lib/api/orders";
   import { goto } from "$app/navigation";
   import { clearCart } from "$lib/cart/localCartApi";
 

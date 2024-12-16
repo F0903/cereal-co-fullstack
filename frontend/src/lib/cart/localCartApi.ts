@@ -1,6 +1,5 @@
-import type { CartItem } from "$lib/models/CartProduct";
 import { dateOffset } from "$lib/utils/datetimeUtils";
-import { Cart } from "./Cart";
+import { Cart, CartItem } from "./Cart";
 
 export const DEFAULT_CART_EXPIRY_MINUTES = 720;
 const CART_LOCAL_STORAGE_NAME = "cart_data";

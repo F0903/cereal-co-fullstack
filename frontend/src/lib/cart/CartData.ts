@@ -1,4 +1,4 @@
-import type { CartItem } from "$lib/models/CartProduct";
+import type { CartItem } from "./Cart";
 
 export type CartData = {
   items: CartItem[];

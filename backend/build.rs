@@ -19,10 +19,12 @@ fn main() {
     let profile = env::var("PROFILE").unwrap(); // `debug` or `release`
     let target_dir = Path::new("target").join(profile);
 
+    // Copy static dir to output
     let src_dir = Path::new("static");
     let dest_dir = target_dir.join("static");
 
-    copy_dir_all(src_dir, dest_dir).unwrap();
+    // We don't want to panic if it can't copy it. Just ignore
+    copy_dir_all(src_dir, dest_dir).ok();
 
     println!("cargo::rerun-if-changed=build.rs");
 }
