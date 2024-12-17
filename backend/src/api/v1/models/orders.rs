@@ -24,6 +24,7 @@ pub struct FormOrder {
 // The model to send when getting an order.
 #[derive(Serialize, Deserialize, Debug)]
 pub struct OrderInfo {
+    pub order_id: i32,
     pub order_form: FormOrder,
     pub created_at: DateTimeUtc,
     pub updated_at: DateTimeUtc,
@@ -35,6 +36,7 @@ impl OrderInfo {
         order_items: &Vec<order_item::Model>,
     ) -> Self {
         Self {
+            order_id: order.id,
             order_form: FormOrder {
                 shipping_name: order.shipping_name,
                 shipping_address: order.shipping_address,

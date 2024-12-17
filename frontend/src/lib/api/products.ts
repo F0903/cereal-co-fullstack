@@ -3,81 +3,74 @@ import { assertOk } from "./errors";
 import { fetchWithCreds } from "./utils";
 
 interface ProductAttributes {
-  [key: string]: string;
+    [key: string]: string;
 }
 
 export class Product {
-  id!: number;
-  name!: string;
-  description!: string;
-  manufacturer!: string;
-  quantity!: number;
-  price!: number;
-  image_url!: string;
-  attributes!: ProductAttributes;
-  created_at!: string;
-  updated_at!: string;
+    id!: number;
+    name!: string;
+    description!: string;
+    manufacturer!: string;
+    quantity!: number;
+    price!: number;
+    image_url!: string;
+    attributes!: ProductAttributes;
+    created_at!: string;
+    updated_at!: string;
 }
 
 export async function getAllProducts(): Promise<Product[]> {
-  const resp = await fetchWithCreds(`${PUBLIC_BACKEND_URL}/api/v1/products`);
+    const resp = await fetchWithCreds(`${PUBLIC_BACKEND_URL}/api/v1/products`);
 
-  assertOk(resp);
+    assertOk(resp);
 
-  const products = await resp.json();
-  let productModels: Product[] = [];
-  products.forEach((productModel: Product) => {
-    productModels.push(productModel);
-  });
-
-  return productModels;
+    return resp.json();
 }
 
 export async function getSingleProduct(id: number): Promise<Product> {
-  const resp = await fetchWithCreds(
-    `${PUBLIC_BACKEND_URL}/api/v1/products/${id}`
-  );
+    const resp = await fetchWithCreds(
+        `${PUBLIC_BACKEND_URL}/api/v1/products/${id}`
+    );
 
-  assertOk(resp);
+    assertOk(resp);
 
-  const product = await resp.json();
-  return product;
+    return resp.json();
 }
 
 export async function setSingleProduct(id: number, product: Product) {
-  const resp = await fetchWithCreds(
-    `${PUBLIC_BACKEND_URL}/api/v1/products/${id}`,
-    {
-      method: "PUT",
-      body: JSON.stringify(product),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+    const resp = await fetchWithCreds(
+        `${PUBLIC_BACKEND_URL}/api/v1/products/${id}`,
+        {
+            method: "PUT",
+            body: JSON.stringify(product),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
 
-  assertOk(resp);
+    assertOk(resp);
 }
 
 export async function addSingleProduct(product: Product) {
-  const resp = await fetchWithCreds(`${PUBLIC_BACKEND_URL}/api/v1/products`, {
-    method: "POST",
-    body: JSON.stringify(product),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+    const resp = await fetchWithCreds(`${PUBLIC_BACKEND_URL}/api/v1/products`, {
+        method: "POST",
+        body: JSON.stringify(product),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
 
-  assertOk(resp);
+    assertOk(resp);
 }
 
 export async function deleteSingleProduct(id: number) {
-  const resp = await fetchWithCreds(
-    `${PUBLIC_BACKEND_URL}/api/v1/products/${id}`,
-    {
-      method: "DELETE",
-    }
-  );
+    const resp = await fetchWithCreds(
+        `${PUBLIC_BACKEND_URL}/api/v1/products/${id}`,
+        {
+            method: "DELETE",
+        }
+    );
 
-  assertOk(resp);
+    assertOk(resp);
 }

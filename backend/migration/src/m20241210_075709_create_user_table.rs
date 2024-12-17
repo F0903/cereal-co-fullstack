@@ -34,7 +34,7 @@ impl MigrationTrait for Migration {
                     .columns([User::IsAdmin, User::Mail, User::PasswordHash])
                     .values_panic([
                         true.into(),
-                        "admin".into(),
+                        "admin@admin.com".into(),
                         argon2
                             .hash_password(b"admin", &salt)
                             .map_err(|_| DbErr::Custom("could not hash password".into()))?

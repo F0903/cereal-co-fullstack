@@ -1,7 +1,7 @@
 use super::{
     api_response::MessageObject,
     api_result::{ApiResult, ApiResultIntoOk},
-    models::UserForm,
+    models::{UserForm, UserInfo},
     ApiResponse,
 };
 use crate::{
@@ -79,8 +79,31 @@ pub async fn login(
 
 #[post("/logout")]
 pub async fn logout(_jwt: JWT, cookies: &CookieJar<'_>) -> ApiResult<MessageObject> {
-    println!("{:?}", _jwt);
     // To logout, we simply tell the client to remove the cookie. Although be aware that the token is still valid until expiry.
     cookies.remove(Cookie::build(AUTH_COOKIE_NAME));
     ApiResponse::success().into_ok()
+}
+
+#[get("/get_user")]
+pub async fn get_logged_in_user(db: &State<DatabaseConnection>, jwt: JWT) -> ApiResult<UserInfo> {
+    let user_id = jwt.claims.sub;
+
+    let user = user::Entity::find_by_id(user_id)
+        .one(db.inner())
+        .await
+        .map_err(|_| ApiResponse::internal_error())?
+        .ok_or(ApiResponse::internal_error())?;
+
+    let user_info = UserInfo {
+        is_admin: user.is_admin != 0,
+        mail: user.mail.clone(),
+        decorative_username: user
+            .mail
+            .split('@')
+            .nth(0)
+            .ok_or(ApiResponse::internal_error())?
+            .to_owned(),
+    };
+
+    ApiResponse::ok(user_info).into_ok()
 }
