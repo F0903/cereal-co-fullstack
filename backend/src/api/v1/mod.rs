@@ -7,7 +7,8 @@ mod models;
 mod orders;
 mod products;
 
-pub use api_response::{ApiError, ApiResponse};
+pub use api_response::{ApiError, ApiResponse, MessageObject};
+pub use api_result::{ApiResult, ApiResultIntoError, ApiResultIntoOk};
 
 pub fn get_routes() -> Vec<Route> {
     routes![
@@ -18,7 +19,7 @@ pub fn get_routes() -> Vec<Route> {
         products::delete_product,
         orders::add_order,
         orders::get_order,
-        orders::get_orders_by_filter,
+        orders::get_orders_by_mail,
         auth::login,
         auth::logout,
         auth::signup,

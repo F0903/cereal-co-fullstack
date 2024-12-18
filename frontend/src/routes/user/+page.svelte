@@ -32,6 +32,8 @@
     .user-view-select-container {
         width: 33%;
         float: left;
+
+        box-sizing: border-box;
     }
 
     .user-view {
@@ -39,17 +41,24 @@
         padding-top: 15px;
         overflow-y: scroll;
         width: 100%;
+
+        box-sizing: border-box;
     }
 
     .user-view-container {
         background-color: var(--secondary-color);
+
         margin-left: auto;
         margin-right: auto;
         margin-top: 50px;
+
         min-height: 500px;
+        max-height: 85vh;
         max-width: 1000px;
 
         border-radius: 15px;
+
+        box-sizing: border-box;
 
         display: flex;
         flex-direction: row;

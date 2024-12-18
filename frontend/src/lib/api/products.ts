@@ -1,6 +1,5 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
-import { assertOk } from "./errors";
-import { fetchWithCreds } from "./utils";
+import { autofetch } from "./utils";
 
 interface ProductAttributes {
     [key: string]: string;
@@ -20,57 +19,37 @@ export class Product {
 }
 
 export async function getAllProducts(): Promise<Product[]> {
-    const resp = await fetchWithCreds(`${PUBLIC_BACKEND_URL}/api/v1/products`);
-
-    assertOk(resp);
-
+    const resp = await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/products`);
     return resp.json();
 }
 
 export async function getSingleProduct(id: number): Promise<Product> {
-    const resp = await fetchWithCreds(
-        `${PUBLIC_BACKEND_URL}/api/v1/products/${id}`
-    );
-
-    assertOk(resp);
-
+    const resp = await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/products/${id}`);
     return resp.json();
 }
 
 export async function setSingleProduct(id: number, product: Product) {
-    const resp = await fetchWithCreds(
-        `${PUBLIC_BACKEND_URL}/api/v1/products/${id}`,
-        {
-            method: "PUT",
-            body: JSON.stringify(product),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }
-    );
-
-    assertOk(resp);
+    await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/products/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(product),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
 }
 
 export async function addSingleProduct(product: Product) {
-    const resp = await fetchWithCreds(`${PUBLIC_BACKEND_URL}/api/v1/products`, {
+    await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/products`, {
         method: "POST",
         body: JSON.stringify(product),
         headers: {
             "Content-Type": "application/json",
         },
     });
-
-    assertOk(resp);
 }
 
 export async function deleteSingleProduct(id: number) {
-    const resp = await fetchWithCreds(
-        `${PUBLIC_BACKEND_URL}/api/v1/products/${id}`,
-        {
-            method: "DELETE",
-        }
-    );
-
-    assertOk(resp);
+    await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/products/${id}`, {
+        method: "DELETE",
+    });
 }

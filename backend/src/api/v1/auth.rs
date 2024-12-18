@@ -35,6 +35,9 @@ pub async fn signup(
             .hash_password(user_form.password_plain.as_bytes(), &salt)
             .map_err(|_| ApiResponse::internal_error())?
             .to_string()),
+        name: Set(user_form.name.clone()),
+        address: Set(user_form.address.clone()),
+        phone: Set(user_form.phone.clone()),
         ..Default::default()
     };
 
@@ -96,13 +99,10 @@ pub async fn get_logged_in_user(db: &State<DatabaseConnection>, jwt: JWT) -> Api
 
     let user_info = UserInfo {
         is_admin: user.is_admin != 0,
-        mail: user.mail.clone(),
-        decorative_username: user
-            .mail
-            .split('@')
-            .nth(0)
-            .ok_or(ApiResponse::internal_error())?
-            .to_owned(),
+        mail: user.mail,
+        name: user.name,
+        address: user.address,
+        phone: user.phone,
     };
 
     ApiResponse::ok(user_info).into_ok()

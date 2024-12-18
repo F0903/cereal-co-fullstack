@@ -3,7 +3,10 @@ use super::{
     api_result::{ApiResult, ApiResultIntoError, ApiResultIntoOk},
     models::{FormOrder, OrderInfo},
 };
-use crate::entities::{order, order_item};
+use crate::{
+    auth::JWT,
+    entities::{order, order_item, user},
+};
 use rocket::{serde::json::Json, State};
 use sea_orm::{entity::*, query::*, DatabaseConnection};
 
@@ -12,6 +15,8 @@ pub async fn add_order(
     db: &State<DatabaseConnection>,
     order_form: Json<FormOrder>,
 ) -> ApiResult<IdObject> {
+    // In a real world web store, there would be some sort of payment id check here.
+
     let order = order::ActiveModel {
         shipping_name: Set(order_form.shipping_name.clone()),
         shipping_address: Set(order_form.shipping_address.clone()),
@@ -46,7 +51,7 @@ pub async fn add_order(
 }
 
 #[get("/orders/<id>")]
-pub async fn get_order(db: &State<DatabaseConnection>, id: i32) -> ApiResult<OrderInfo> {
+pub async fn get_order(jwt: JWT, db: &State<DatabaseConnection>, id: i32) -> ApiResult<OrderInfo> {
     let orders = order::Entity::find_by_id(id)
         .find_with_related(order_item::Entity)
         .all(db.inner())
@@ -55,30 +60,43 @@ pub async fn get_order(db: &State<DatabaseConnection>, id: i32) -> ApiResult<Ord
 
     // It's guaranteed to only contain one order, since ID is unique.
     let (order, order_items) = &orders[0];
+
+    let calling_user = user::Entity::find_by_id(jwt.claims.sub)
+        .one(db.inner())
+        .await
+        .map_err(|_| ApiResponse::unauthorized())?
+        .ok_or(ApiResponse::unauthorized())?;
+
+    // Make sure the mail of the user and requested order is matching.
+    if calling_user.mail != order.shipping_mail {
+        return ApiResponse::unauthorized().into_error();
+    }
+
     let order_info = OrderInfo::create_from_orm_model(order.clone(), order_items);
 
     ApiResponse::ok(order_info).into_ok()
 }
 
-#[get("/orders?<mail>&<name>")]
-pub async fn get_orders_by_filter(
+#[get("/orders?<mail>")]
+pub async fn get_orders_by_mail(
+    jwt: JWT,
     db: &State<DatabaseConnection>,
-    mail: Option<&str>,
-    name: Option<&str>,
+    mail: &str,
 ) -> ApiResult<Vec<OrderInfo>> {
-    if mail.is_none() && name.is_none() {
-        return ApiResponse::bad_request().into_error();
+    let calling_user = user::Entity::find_by_id(jwt.claims.sub)
+        .one(db.inner())
+        .await
+        .map_err(|_| ApiResponse::unauthorized())?
+        .ok_or(ApiResponse::unauthorized())?;
+
+    // Make sure the mail of the user and requested order is matching.
+    if calling_user.mail != mail {
+        return ApiResponse::unauthorized().into_error();
     }
 
-    let mut select = order::Entity::find().find_with_related(order_item::Entity);
-
-    if let Some(mail) = mail {
-        select = select.filter(order::Column::ShippingMail.eq(mail));
-    }
-
-    if let Some(name) = name {
-        select = select.filter(order::Column::ShippingName.eq(name));
-    }
+    let select = order::Entity::find()
+        .find_with_related(order_item::Entity)
+        .filter(order::Column::ShippingMail.eq(mail));
 
     let orders = select
         .all(db.inner())

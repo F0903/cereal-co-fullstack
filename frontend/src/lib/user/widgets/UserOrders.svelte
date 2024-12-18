@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { UserInfo } from "$lib/api/auth";
-    import { getOrdersByFilter, OrderWithTimestamps } from "$lib/api/orders";
+    import { getOrdersByMail, OrderWithTimestamps } from "$lib/api/orders";
     import OrderView from "$lib/orders/OrderView.svelte";
     import { onMount } from "svelte";
 
@@ -9,7 +9,7 @@
     let orders: OrderWithTimestamps[] = $state([]);
 
     onMount(async () => {
-        orders = await getOrdersByFilter(user.mail);
+        orders = await getOrdersByMail(user.mail);
     });
 </script>
 
@@ -26,7 +26,7 @@
     .content-column {
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: 10px;
     }
 
     h2 {

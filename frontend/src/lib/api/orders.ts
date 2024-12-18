@@ -1,6 +1,5 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
-import { assertOk } from "./errors";
-import { fetchWithCreds } from "./utils";
+import { autofetch } from "./utils";
 
 // All of these are used be sent as json, so it doesn't matter that the fields are strings, as they will be anyway.
 export class OrderItem {
@@ -26,7 +25,7 @@ export class OrderWithTimestamps {
 
 // Returns the created orders id if successful
 export async function addOrder(order: Order): Promise<number> {
-    const resp = await fetchWithCreds(`${PUBLIC_BACKEND_URL}/api/v1/orders`, {
+    const resp = await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/orders`, {
         method: "POST",
         body: JSON.stringify(order),
         headers: {
@@ -34,39 +33,23 @@ export async function addOrder(order: Order): Promise<number> {
         },
     });
 
-    assertOk(resp);
-
     const json: { id: number } = await resp.json();
     return json.id;
 }
 
 export async function getOrder(id: number): Promise<Order> {
-    const resp = await fetchWithCreds(
-        `${PUBLIC_BACKEND_URL}/api/v1/orders/${id}`
-    );
-
-    assertOk(resp);
-
+    const resp = await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/orders/${id}`);
     return resp.json();
 }
 
-export async function getOrdersByFilter(
-    mail?: string,
-    name?: string
+export async function getOrdersByMail(
+    mail: string
 ): Promise<OrderWithTimestamps[]> {
-    if (!name && !mail) {
-        throw new Error("both 'name' and 'mail' cannot be null");
-    }
-
     const searchParams = new URLSearchParams();
     if (mail) searchParams.append("mail", mail);
-    if (name) searchParams.append("name", name);
 
-    const resp = await fetchWithCreds(
+    const resp = await autofetch(
         `${PUBLIC_BACKEND_URL}/api/v1/orders?${searchParams}`
     );
-
-    assertOk(resp);
-
     return resp.json();
 }

@@ -3,7 +3,7 @@ use super::{
     api_result::{ApiResult, ApiResultIntoOk},
     models::FormProduct,
 };
-use crate::entities::product;
+use crate::{auth::JWT, entities::product};
 use rocket::{serde::json::Json, State};
 use sea_orm::{entity::*, query::*, DatabaseConnection};
 
@@ -34,9 +34,12 @@ pub async fn get_product(db: &State<DatabaseConnection>, id: i32) -> ApiResult<p
 
 #[post("/products", format = "json", data = "<product>")]
 pub async fn add_product(
+    jwt: JWT,
     db: &State<DatabaseConnection>,
     product: Json<FormProduct>,
 ) -> ApiResult<MessageObject> {
+    jwt.assert_admin()?;
+
     let product = product.into_inner();
     println!("{:?}", &product);
 
@@ -50,7 +53,13 @@ pub async fn add_product(
 }
 
 #[delete("/products/<id>")]
-pub async fn delete_product(db: &State<DatabaseConnection>, id: i32) -> ApiResult<MessageObject> {
+pub async fn delete_product(
+    jwt: JWT,
+    db: &State<DatabaseConnection>,
+    id: i32,
+) -> ApiResult<MessageObject> {
+    jwt.assert_admin()?;
+
     let product = product::Entity::find_by_id(id)
         .one(db.inner())
         .await
@@ -70,10 +79,13 @@ pub async fn delete_product(db: &State<DatabaseConnection>, id: i32) -> ApiResul
 
 #[put("/products/<id>", format = "json", data = "<new_product>")]
 pub async fn update_product(
+    jwt: JWT,
     db: &State<DatabaseConnection>,
     id: i32,
     new_product: Json<FormProduct>,
 ) -> ApiResult<MessageObject> {
+    jwt.assert_admin()?;
+
     let new_product = new_product.into_inner();
     println!("{:?}", &new_product);
 

@@ -1,10 +1,13 @@
+import { goto } from "$app/navigation";
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
+import { ApiError, assertOk } from "./errors";
 
 export function getFullImageUrl(path: string): string {
     return PUBLIC_BACKEND_URL + path;
 }
 
-export function fetchWithCreds(
+// Includes credentials and asserts response.
+export async function autofetch(
     input: RequestInfo | URL,
     init?: RequestInit
 ): Promise<Response> {
@@ -13,5 +16,8 @@ export function fetchWithCreds(
     }
     init.credentials = "include";
 
-    return fetch(input, init);
+    const resp = await fetch(input, init);
+    assertOk(resp);
+
+    return resp;
 }

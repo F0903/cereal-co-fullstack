@@ -1,6 +1,8 @@
 use super::{AUTH_COOKIE_NAME, DEFAULT_TOKEN_EXPIRY_SECONDS};
 use crate::{
-    api::v1::{ApiError, ApiResponse},
+    api::v1::{
+        ApiError, ApiResponse, ApiResult, ApiResultIntoError, ApiResultIntoOk, MessageObject,
+    },
     entities::user,
     utils::generic_result::GenericResult,
 };
@@ -26,6 +28,16 @@ pub struct Claims {
 #[derive(Debug)]
 pub struct JWT {
     pub claims: Claims,
+}
+
+impl JWT {
+    pub fn assert_admin(&self) -> ApiResult<MessageObject> {
+        if self.claims.is_admin {
+            return ApiResponse::success().into_ok();
+        }
+
+        ApiResponse::unauthorized().into_error()
+    }
 }
 
 // Request guard for JWT that requires an Auth cookie.

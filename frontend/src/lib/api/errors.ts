@@ -1,5 +1,3 @@
-import { goto } from "$app/navigation";
-
 export class ApiError extends Error {
     statusCode: number;
 
@@ -9,21 +7,20 @@ export class ApiError extends Error {
         this.statusCode = statusCode;
         Object.setPrototypeOf(this, ApiError.prototype);
     }
-
-    getStatusCode(): number {
-        return this.statusCode;
-    }
 }
 
 export function assertOk(resp: Response) {
     if (resp.ok) return;
 
     if (resp.status === 401) {
-        goto("/");
         throw new ApiError(`Request is not authorized`, resp.status);
     }
     throw new ApiError(
         `Response was not OK. Response was:\n${resp.statusText}`,
         resp.status
     );
+}
+
+export function isErrorUnauthorized(error: ApiError): boolean {
+    return error.statusCode === 401;
 }

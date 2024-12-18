@@ -19,6 +19,9 @@ impl MigrationTrait for Migration {
                     .col(boolean(User::IsAdmin))
                     .col(string_uniq(User::Mail))
                     .col(string(User::PasswordHash))
+                    .col(string(User::Name))
+                    .col(string_null(User::Address))
+                    .col(string_null(User::Phone))
                     .to_owned(),
             ))
             .await?;
@@ -31,7 +34,7 @@ impl MigrationTrait for Migration {
             .exec_stmt(
                 Query::insert()
                     .into_table(User::Table)
-                    .columns([User::IsAdmin, User::Mail, User::PasswordHash])
+                    .columns([User::IsAdmin, User::Mail, User::PasswordHash, User::Name])
                     .values_panic([
                         true.into(),
                         "admin@admin.com".into(),
@@ -40,6 +43,7 @@ impl MigrationTrait for Migration {
                             .map_err(|_| DbErr::Custom("could not hash password".into()))?
                             .to_string()
                             .into(),
+                        "admin".into(),
                     ])
                     .to_owned(),
             )
@@ -62,4 +66,7 @@ enum User {
     IsAdmin,
     Mail,
     PasswordHash,
+    Name,
+    Address,
+    Phone,
 }

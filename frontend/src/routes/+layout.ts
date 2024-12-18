@@ -4,7 +4,10 @@ import type { LayoutLoad } from "./$types";
 
 export const load: LayoutLoad = async () => {
     // This will never succeed on SSR, so only run in browser.
-    const currentUser = browser ? await getCurrentUser() : undefined;
+    let currentUser = undefined;
+    try {
+        currentUser = browser ? await getCurrentUser() : undefined;
+    } catch {}
 
     return { loggedIn: currentUser !== undefined, currentUser };
 };

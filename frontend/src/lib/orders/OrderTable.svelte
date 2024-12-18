@@ -42,7 +42,7 @@
                     <td>{product.name}</td>
                     <td>{item.quantity}</td>
                     <td>${product.price}</td>
-                    <td>${item.quantity * product.price}</td>
+                    <td>${(item.quantity * product.price).toFixed(2)}</td>
                 </tr>
             {/await}
         {/each}
