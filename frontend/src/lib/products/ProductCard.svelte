@@ -1,9 +1,9 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import { cart } from "$lib/cart/cartStore.svelte";
     import type { Product } from "../api/products";
     import { getFullImageUrl } from "../api/utils";
     import Button from "../generic/Button.svelte";
-    import { addToCart } from "../cart/localCartApi";
     import ClickableImage from "../generic/ClickableImage.svelte";
     import Spacer from "../generic/Spacer.svelte";
 
@@ -14,7 +14,7 @@
     }
 
     function onAddClick() {
-        addToCart({ product, quantity: 1 });
+        cart.addItem({ product, quantity: 1 });
     }
 </script>
 

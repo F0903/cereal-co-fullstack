@@ -34,6 +34,8 @@
             <div class="list-item" class:selected={selection === option}>
                 <Button
                     --background-color="var(--list-color)"
+                    --margin="auto"
+                    --padding="10px 20px"
                     onclick={() => onSelect(option)}>{option}</Button
                 >
             </div>

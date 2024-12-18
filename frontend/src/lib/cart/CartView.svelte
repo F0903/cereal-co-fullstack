@@ -1,31 +1,16 @@
 <script lang="ts">
-    import { onMount } from "svelte";
     import Image from "$lib/generic/Image.svelte";
     import { getFullImageUrl } from "$lib/api/utils";
     import Button from "$lib/generic/Button.svelte";
     import { goto } from "$app/navigation";
     import Spacer from "$lib/generic/Spacer.svelte";
     import Counter from "$lib/generic/Counter.svelte";
-    import { getCart, modifyCartItem, removeCartItem } from "./localCartApi";
-    import { Cart } from "./Cart";
-
-    let { visible = $bindable(false) } = $props();
-
-    let cart = $state(Cart.default());
+    import { cart } from "./cartStore.svelte";
+    import { CartItem } from "./LocalCart.svelte";
 
     async function onCheckoutClick() {
-        visible = false;
         await goto("/checkout");
     }
-
-    function reloadCart() {
-        cart = getCart();
-    }
-
-    $effect(() => {
-        visible; // Run when visible changes.
-        reloadCart();
-    });
 </script>
 
 <div class="cart-view">
@@ -49,16 +34,13 @@
                 <Counter
                     value={item.quantity}
                     on_value_changed={(newVal) => {
-                        // This is extremely inefficient
-                        modifyCartItem(
+                        cart.modifyItem(
                             item.product.id,
-                            (itm) => (itm.quantity = newVal),
+                            (itm: CartItem) => (itm.quantity = newVal),
                         );
-                        reloadCart();
                     }}
                     on_negative_value_callback={() => {
-                        removeCartItem(item.product.id);
-                        reloadCart(); // Explicitly reloading the cart like this isn't exactly pretty. But I have not figured out a way to make this better with stores and the current cart API.
+                        cart.removeItem(item.product.id);
                     }}
                     --background-color="var(--secondary-color)"
                     --seperator-color="var(--tertiary-color)"

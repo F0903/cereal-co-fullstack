@@ -9,8 +9,8 @@
     import { assertNotNull } from "$lib/utils/typeUtils";
     import { addOrder, Order, OrderItem } from "$lib/api/orders";
     import { goto } from "$app/navigation";
-    import { clearCart } from "$lib/cart/localCartApi";
     import Table from "$lib/generic/Table.svelte";
+    import { cart } from "$lib/cart/cartStore.svelte";
 
     let { data }: { data: PageData } = $props();
 
@@ -19,16 +19,18 @@
     let disabledCheckout = $state(false);
 
     let totalPrice = $derived.by(() => {
-        const sum = data.cart.calcSum().toFixed(2);
+        const sum = cart.calcSum().toFixed(2);
         return sum;
     });
 
-    async function onCheckoutClick() {
+    async function onCheckoutClick(event: Event) {
+        event.preventDefault();
+
         disabledCheckout = true;
 
         const formData = new FormData(form);
 
-        const cartItems = data.cart.getItems();
+        const cartItems = cart.getItems();
         const orderItems: OrderItem[] = [];
         for (const item of cartItems) {
             orderItems.push({
@@ -47,8 +49,8 @@
         };
 
         const orderId = await addOrder(order);
-        clearCart();
         await goto(`/checkout/success/${orderId}`);
+        cart.clear();
     }
 </script>
 
@@ -68,7 +70,7 @@
                 </tr>
             </thead>
             <tbody>
-                {#each data.cart.getItems() as item}
+                {#each cart.getItems() as item}
                     <tr>
                         <td>
                             <Image

@@ -1,36 +1,37 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { login, UserLoginForm } from "$lib/api/auth";
+    import { changePassword, ChangePasswordForm } from "$lib/api/auth";
     import { ApiError } from "$lib/api/errors";
     import Button from "$lib/generic/Button.svelte";
     import ErrorBox from "$lib/generic/ErrorBox.svelte";
     import InputField from "$lib/generic/InputField.svelte";
     import { AssertionError, assertNotNull } from "$lib/utils/typeUtils";
-    import { faLockOpen, faPlus } from "@fortawesome/free-solid-svg-icons";
+    import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+    import type { PageData } from "./$types";
+
+    let { data }: { data: PageData } = $props();
 
     let form: HTMLFormElement;
 
     let disableButtons = $state(false);
 
-    let error: "Unauthorized" | "MailError" | "PasswordError" | boolean =
+    let error: "Unauthorized" | "OldPasswordError" | "PasswordError" | boolean =
         $state(false);
     let errorMessage = $state("");
 
-    async function onLoginClick(event: Event) {
-        event.preventDefault();
-
+    async function onChangeClick() {
         error = false;
 
         const formData = new FormData(form);
 
         try {
-            const loginForm: UserLoginForm = {
-                mail: assertNotNull(
-                    formData.get("Mail") as string,
-                    "Mail cannot be empty!",
-                    "MailError",
+            const loginForm: ChangePasswordForm = {
+                old_password_plain: assertNotNull(
+                    formData.get("Old Password") as string,
+                    "Old password cannot be empty!",
+                    "OldPasswordError",
                 ),
-                password_plain: assertNotNull(
+                new_password_plain: assertNotNull(
                     formData.get("Password") as string,
                     "Password cannot be empty!",
                     "PasswordError",
@@ -38,13 +39,16 @@
             };
 
             disableButtons = true;
-            await login(loginForm);
+            await changePassword(loginForm);
         } catch (err) {
             disableButtons = false;
 
             if (err instanceof ApiError) {
-                error = "Unauthorized";
-                errorMessage = "Invalid credentials!";
+                error = err.statusCode === 401 ? "Unauthorized" : true;
+                errorMessage =
+                    err.statusCode === 401
+                        ? "Invalid credentials!"
+                        : err.message;
                 return;
             }
             if (err instanceof AssertionError) {
@@ -58,20 +62,20 @@
             return;
         }
 
-        await goto("/", { invalidateAll: true });
+        await goto(data.redirect ?? "/");
     }
 </script>
 
 <div class="form-container">
-    <h1>Log In</h1>
+    <h1>Change Password</h1>
     {#if error}
         <ErrorBox message={errorMessage} --margin-bottom="25px" />
     {/if}
-    <form class="login-container" bind:this={form} onsubmit={onLoginClick}>
+    <form class="passwords-container" bind:this={form}>
         <InputField
-            name="Mail"
-            input_type="email"
-            has_input_error={error === "MailError"}
+            name="Old Password"
+            input_type="password"
+            has_input_error={error === "OldPasswordError"}
         />
         <InputField
             name="Password"
@@ -80,23 +84,14 @@
         />
         <Button
             disabled={disableButtons}
-            prefixIcon={faLockOpen}
-            onclick={onLoginClick}
-            --width="fit-content"
+            prefixIcon={faArrowRight}
+            onclick={onChangeClick}
             --padding="15px"
-            --font-size="1.2em"
-            --margin="15px auto 0px auto">Login</Button
+            --width="fit-content"
+            --margin="15px auto 0px auto"
+            --font-size="1.2em">Change</Button
         >
     </form>
-    <Button
-        disabled={disableButtons}
-        prefixIcon={faPlus}
-        onclick={() => goto("/signup?redirect=/login")}
-        --background-color="var(--primary-color)"
-        --width="fit-content"
-        --margin="15px auto 0px auto"
-        --font-size="1em">Sign Up</Button
-    >
 </div>
 
 <style>

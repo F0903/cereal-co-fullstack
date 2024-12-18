@@ -1,6 +1,8 @@
 <script lang="ts">
+    import Button from "$lib/generic/Button.svelte";
     import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-    import Fa from "svelte-fa";
+    import { cart } from "./cartStore.svelte";
+    import { browser } from "$app/environment";
 
     let { cartVisible = $bindable(false) } = $props();
 
@@ -9,28 +11,15 @@
     }
 </script>
 
-<div
-    class="shopping-cart"
-    class:visible={cartVisible}
-    onclick={onShoppingCartClick}
-    onkeydown={onShoppingCartClick}
-    tabindex="0"
-    role="button"
->
-    <Fa icon={faShoppingCart} />
-</div>
+{#if browser}
+    <Button
+        prefixIcon={faShoppingCart}
+        onclick={onShoppingCartClick}
+        --padding="15px 20px"
+        --background-color="var(--primary-color)"
+        >${cart.getDisplayableTotalSum()}</Button
+    >
+{/if}
 
 <style>
-    .shopping-cart :global(svg) {
-        width: 100%;
-        height: 100%;
-    }
-
-    .shopping-cart.visible {
-        color: var(--primary-color);
-    }
-
-    .shopping-cart {
-        cursor: pointer;
-    }
 </style>

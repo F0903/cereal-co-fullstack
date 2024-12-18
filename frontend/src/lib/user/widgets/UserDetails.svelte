@@ -1,5 +1,8 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import type { UserInfo } from "$lib/api/auth";
+    import Button from "$lib/generic/Button.svelte";
+    import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 
     let { user }: { user: UserInfo } = $props();
 </script>
@@ -19,10 +22,24 @@
         <div class="phone">
             <span class="value-title">Phone:</span><span>{user.phone}</span>
         </div>
+        <div class="buttons">
+            <Button
+                prefixIcon={faRefresh}
+                onclick={() => goto("/user/change-password?redirect=/user")}
+                --width="fit-content"
+                --background-color="var(--primary-color)"
+                >Change Password</Button
+            >
+        </div>
     </div>
 </div>
 
 <style>
+    .buttons {
+        margin-top: 20px;
+        padding: 0px 10px;
+    }
+
     .content-column {
         display: flex;
         flex-direction: column;

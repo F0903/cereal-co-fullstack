@@ -109,7 +109,7 @@ pub async fn get_logged_in_user(
     ApiResponse::ok(user_info).into_ok()
 }
 
-#[post("/get_user", format = "json", data = "<passwords>")]
+#[post("/change_password", format = "json", data = "<passwords>")]
 pub async fn change_password(
     jwt: JWT,
     db: &State<DatabaseConnection>,

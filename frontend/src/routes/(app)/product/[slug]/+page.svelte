@@ -5,7 +5,7 @@
     import Spacer from "$lib/generic/Spacer.svelte";
     import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
     import type { PageData } from "./$types";
-    import { addToCart } from "$lib/cart/localCartApi";
+    import { cart } from "$lib/cart/cartStore.svelte";
 
     let { data }: { data: PageData } = $props();
 
@@ -17,7 +17,7 @@
               : "Limited";
 
     function onAddClick() {
-        addToCart({ product: data.product, quantity: 1 });
+        cart.addItem({ product: data.product, quantity: 1 });
     }
 </script>
 

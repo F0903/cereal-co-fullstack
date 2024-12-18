@@ -10,25 +10,18 @@
         prefixIcon = undefined,
     }: {
         children: Snippet;
-        onclick: () => void;
+        onclick: (event: Event) => void;
         disabled?: boolean;
         prefixIcon?: IconDefinition;
     } = $props();
 </script>
 
-<div
-    class="button"
-    class:disabled
-    {onclick}
-    onkeypress={onclick}
-    role="button"
-    tabindex="0"
->
+<button class="button" class:disabled {onclick} onkeypress={onclick}>
     {#if prefixIcon}
         <Fa icon={prefixIcon} />
     {/if}
     {@render children()}
-</div>
+</button>
 
 <style>
     .button:hover {
@@ -57,6 +50,7 @@
         font-weight: 600;
         border-radius: var(--border-radius, 15px);
         padding: var(--padding, 10px);
+        margin: var(--margin);
         border: var(--border);
         height: var(--height);
         width: var(--width);

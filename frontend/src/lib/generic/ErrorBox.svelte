@@ -19,6 +19,7 @@
         border-left: 3px solid var(--error-color, hsl(0, 45%, 45%));
         border-radius: 7px;
         padding: 15px;
-        margin-top: 10px;
+        margin-top: var(--margin-top, 10px);
+        margin-bottom: var(--margin-bottom, 0px);
     }
 </style>
