@@ -1,7 +1,7 @@
 use super::{
     api_response::MessageObject,
     api_result::{ApiResult, ApiResultIntoOk},
-    models::{UserLoginForm, UserResponse, UserSignupForm},
+    models::{ChangePasswordForm, UserLoginForm, UserResponse, UserSignupForm},
     ApiResponse,
 };
 use crate::{
@@ -89,16 +89,14 @@ pub async fn logout(_jwt: JWT, cookies: &CookieJar<'_>) -> ApiResult<MessageObje
 
 #[get("/get_user")]
 pub async fn get_logged_in_user(
-    db: &State<DatabaseConnection>,
     jwt: JWT,
+    db: &State<DatabaseConnection>,
 ) -> ApiResult<UserResponse> {
-    let user_id = jwt.claims.sub;
-
-    let user = user::Entity::find_by_id(user_id)
+    let user = user::Entity::find_by_id(jwt.claims.sub)
         .one(db.inner())
         .await
-        .map_err(|_| ApiResponse::internal_error())?
-        .ok_or(ApiResponse::internal_error())?;
+        .map_err(|_| ApiResponse::unauthorized())?
+        .ok_or(ApiResponse::unauthorized())?;
 
     let user_info = UserResponse {
         is_admin: user.is_admin != 0,
@@ -109,4 +107,43 @@ pub async fn get_logged_in_user(
     };
 
     ApiResponse::ok(user_info).into_ok()
+}
+
+#[post("/get_user", format = "json", data = "<passwords>")]
+pub async fn change_password(
+    jwt: JWT,
+    db: &State<DatabaseConnection>,
+    passwords: Json<ChangePasswordForm>,
+) -> ApiResult<MessageObject> {
+    let user = user::Entity::find_by_id(jwt.claims.sub)
+        .one(db.inner())
+        .await
+        .map_err(|_| ApiResponse::unauthorized())?
+        .ok_or(ApiResponse::unauthorized())?;
+
+    let argon2 = Argon2::default();
+    let salt = SaltString::generate(OsRng);
+
+    // Check that the old password is actually correct.
+    argon2
+        .verify_password(
+            passwords.old_password_plain.as_bytes(),
+            &PasswordHash::new(&user.password_hash).map_err(|_| ApiResponse::bad_request())?,
+        )
+        .map_err(|_| ApiResponse::unauthorized())?;
+
+    // Get the existing record and set the new password.
+    let mut user_model = user.into_active_model();
+    user_model.password_hash = Set(argon2
+        .hash_password(passwords.new_password_plain.as_bytes(), &salt)
+        .map_err(|_| ApiResponse::internal_error())?
+        .to_string());
+
+    // Insert updated model
+    user_model
+        .update(db.inner())
+        .await
+        .map_err(|_| ApiResponse::internal_error())?;
+
+    ApiResponse::success().into_ok()
 }

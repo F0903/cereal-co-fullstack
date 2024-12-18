@@ -24,5 +24,6 @@ pub fn get_routes() -> Vec<Route> {
         auth::logout,
         auth::signup,
         auth::get_logged_in_user,
+        auth::change_password
     ]
 }
