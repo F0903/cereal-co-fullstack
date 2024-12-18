@@ -7,16 +7,24 @@
         children,
         onclick,
         disabled,
+        hoverAnimation = true,
         prefixIcon = undefined,
     }: {
         children: Snippet;
         onclick: (event: Event) => void;
         disabled?: boolean;
+        hoverAnimation?: boolean;
         prefixIcon?: IconDefinition;
     } = $props();
 </script>
 
-<button class="button" class:disabled {onclick} onkeypress={onclick}>
+<button
+    class="button"
+    class:hover-animation={hoverAnimation}
+    class:disabled
+    {onclick}
+    onkeypress={onclick}
+>
     {#if prefixIcon}
         <Fa icon={prefixIcon} />
     {/if}
@@ -24,6 +32,16 @@
 </button>
 
 <style>
+    .button.hover-animation:hover {
+        scale: 1.06;
+    }
+
+    .button.hover-animation {
+        transition-property: scale;
+        transition-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        transition-duration: 50ms;
+    }
+
     .button:hover {
         cursor: pointer;
         filter: brightness(1.5);
