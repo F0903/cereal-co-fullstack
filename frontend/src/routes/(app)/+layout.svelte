@@ -5,8 +5,10 @@
     import { clickOutside } from "$lib/utils/clickOutside.svelte";
     import AuthButton from "$lib/user/AuthButton.svelte";
     import { fly } from "svelte/transition";
-    import UserContainer from "$lib/user/UserContainer.svelte";
+    import UserButton from "$lib/user/UserButton.svelte";
     import Header from "$lib/generic/Header.svelte";
+    import HorizontalSpacer from "$lib/generic/HorizontalSpacer.svelte";
+    import AuthContainer from "$lib/user/AuthContainer.svelte";
 
     let { data, children } = $props();
 
@@ -31,6 +33,7 @@
     </div>
 
     <div class="buttons-container">
+        <AuthContainer loggedIn={data.loggedIn} user={data.currentUser!} />
         <div
             class="cart-container"
             use:clickOutside
@@ -50,34 +53,20 @@
                 </div>
             {/if}
         </div>
-
-        <div class="auth-container">
-            {#if data.loggedIn}
-                <UserContainer user={data.currentUser!} />
-            {/if}
-            <AuthButton loggedIn={data.loggedIn} />
-        </div>
     </div>
 </Header>
 {@render children()}
 
 <style>
-    .auth-container {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-    }
-
     .buttons-container {
         display: flex;
         flex-direction: row;
-        height: 100%;
         gap: 25px;
+
+        height: 100%;
+        padding: 10px;
         float: right;
         box-sizing: border-box;
-        padding: 10px;
     }
 
     .cart-view-container {

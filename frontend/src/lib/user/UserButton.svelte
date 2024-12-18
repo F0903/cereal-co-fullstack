@@ -14,6 +14,7 @@
 <Button
     prefixIcon={faUserCircle}
     onclick={onUserClick}
+    hoverAnimation={false}
     --background-color="var(--primary-color)"
     --padding="15px"
 >

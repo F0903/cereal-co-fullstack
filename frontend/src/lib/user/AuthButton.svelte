@@ -24,9 +24,9 @@
     <Button
         {prefixIcon}
         {onclick}
+        hoverAnimation={false}
         --background-color="var(--primary-color)"
         --padding="25px"
-        --border="2px solid var(--secondary-color)"
         --height="100%">{text}</Button
     >
 {/snippet}
