@@ -1,7 +1,15 @@
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
 import { autofetch } from "./utils";
 
-export class UserForm {
+export class UserSignupForm {
+    mail!: string;
+    password_plain!: string;
+    name!: string;
+    address?: string;
+    phone?: string;
+}
+
+export class UserLoginForm {
     mail!: string;
     password_plain!: string;
 }
@@ -9,10 +17,12 @@ export class UserForm {
 export class UserInfo {
     is_admin!: boolean;
     mail!: string;
-    decorative_username!: string;
+    name!: string;
+    address?: string;
+    phone?: string;
 }
 
-export async function signup(userForm: UserForm) {
+export async function signup(userForm: UserSignupForm) {
     await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/signup`, {
         method: "POST",
         body: JSON.stringify(userForm),
@@ -22,7 +32,7 @@ export async function signup(userForm: UserForm) {
     });
 }
 
-export async function login(userForm: UserForm) {
+export async function login(userForm: UserLoginForm) {
     await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/login`, {
         method: "POST",
         body: JSON.stringify(userForm),

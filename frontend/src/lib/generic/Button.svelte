@@ -6,15 +6,24 @@
     let {
         children,
         onclick,
+        disabled,
         prefixIcon = undefined,
     }: {
         children: Snippet;
         onclick: () => void;
+        disabled?: boolean;
         prefixIcon?: IconDefinition;
     } = $props();
 </script>
 
-<div class="button" {onclick} onkeypress={onclick} role="button" tabindex="0">
+<div
+    class="button"
+    class:disabled
+    {onclick}
+    onkeypress={onclick}
+    role="button"
+    tabindex="0"
+>
     {#if prefixIcon}
         <Fa icon={prefixIcon} />
     {/if}
@@ -25,6 +34,11 @@
     .button:hover {
         cursor: pointer;
         filter: brightness(1.5);
+    }
+
+    .button.disabled {
+        filter: brightness(0.5);
+        pointer-events: none;
     }
 
     .button {

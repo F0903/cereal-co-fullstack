@@ -1,16 +1,19 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { login, UserForm } from "$lib/api/auth";
+    import { login, UserLoginForm } from "$lib/api/auth";
     import { ApiError } from "$lib/api/errors";
     import Button from "$lib/generic/Button.svelte";
     import ErrorBox from "$lib/generic/ErrorBox.svelte";
     import InputField from "$lib/generic/InputField.svelte";
-    import { assertNotNull } from "$lib/utils/typeUtils";
+    import { AssertionError, assertNotNull } from "$lib/utils/typeUtils";
     import { faLockOpen, faPlus } from "@fortawesome/free-solid-svg-icons";
 
     let form: HTMLFormElement;
 
-    let error: "Unauthorized" | boolean = $state(false);
+    let disableButtons = $state(false);
+
+    let error: "Unauthorized" | "MailError" | "PasswordError" | boolean =
+        $state(false);
     let errorMessage = $state("");
 
     async function onLoginClick() {
@@ -18,20 +21,32 @@
 
         const formData = new FormData(form);
 
-        const userForm: UserForm = {
-            mail: assertNotNull(formData.get("Mail") as string),
-            password_plain: assertNotNull(formData.get("Password") as string),
-        };
-
         try {
-            await login(userForm);
+            const loginForm: UserLoginForm = {
+                mail: assertNotNull(
+                    formData.get("Mail") as string,
+                    "Mail cannot be empty!",
+                    "MailError",
+                ),
+                password_plain: assertNotNull(
+                    formData.get("Password") as string,
+                    "Password cannot be empty!",
+                    "PasswordError",
+                ),
+            };
+
+            disableButtons = true;
+            await login(loginForm);
         } catch (err) {
+            disableButtons = false;
+
             if (err instanceof ApiError) {
                 error = "Unauthorized";
                 errorMessage = "Invalid credentials!";
                 return;
             }
-            if (err instanceof Error) {
+            if (err instanceof AssertionError) {
+                error = (err.failureName as any) ?? true;
                 errorMessage = err.message;
                 return;
             }
@@ -50,20 +65,25 @@
     <InputField
         name="Mail"
         input_type="email"
-        has_input_error={error === "Unauthorized"}
+        has_input_error={error === "MailError"}
     />
     <InputField
         name="Password"
         input_type="password"
-        has_input_error={error === "Unauthorized"}
+        has_input_error={error === "PasswordError"}
     />
     <div class="buttons-container">
         <Button
+            disabled={disableButtons}
             prefixIcon={faPlus}
             onclick={() => goto("/signup?redirect=/login")}
             --background-color="var(--primary-color)">Sign Up</Button
         >
-        <Button prefixIcon={faLockOpen} onclick={onLoginClick}>Login</Button>
+        <Button
+            disabled={disableButtons}
+            prefixIcon={faLockOpen}
+            onclick={onLoginClick}>Login</Button
+        >
     </div>
     {#if error}
         <ErrorBox message={errorMessage} />

@@ -10,10 +10,14 @@
         <div class="mail">
             <span class="value-title">Mail:</span><span>{user.mail}</span>
         </div>
-        <div class="username">
-            <span class="value-title">Username:</span><span
-                >{user.decorative_username}</span
-            >
+        <div class="name">
+            <span class="value-title">Name:</span><span>{user.name}</span>
+        </div>
+        <div class="address">
+            <span class="value-title">Address:</span><span>{user.address}</span>
+        </div>
+        <div class="phone">
+            <span class="value-title">Phone:</span><span>{user.phone}</span>
         </div>
     </div>
 </div>

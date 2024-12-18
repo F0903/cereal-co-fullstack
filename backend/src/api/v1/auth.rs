@@ -1,7 +1,7 @@
 use super::{
     api_response::MessageObject,
     api_result::{ApiResult, ApiResultIntoOk},
-    models::{UserForm, UserInfo},
+    models::{UserLoginForm, UserResponse, UserSignupForm},
     ApiResponse,
 };
 use crate::{
@@ -23,7 +23,7 @@ use sea_orm::{entity::*, query::*, DatabaseConnection};
 #[post("/signup", format = "json", data = "<user_form>")]
 pub async fn signup(
     db: &State<DatabaseConnection>,
-    user_form: Json<UserForm>,
+    user_form: Json<UserSignupForm>,
 ) -> ApiResult<MessageObject> {
     let argon2 = Argon2::default();
     let salt = SaltString::generate(OsRng);
@@ -52,7 +52,7 @@ pub async fn signup(
 #[post("/login", format = "json", data = "<user_form>")]
 pub async fn login(
     db: &State<DatabaseConnection>,
-    user_form: Json<UserForm>,
+    user_form: Json<UserLoginForm>,
     cookies: &CookieJar<'_>,
 ) -> ApiResult<MessageObject> {
     let user = user::Entity::find()
@@ -88,7 +88,10 @@ pub async fn logout(_jwt: JWT, cookies: &CookieJar<'_>) -> ApiResult<MessageObje
 }
 
 #[get("/get_user")]
-pub async fn get_logged_in_user(db: &State<DatabaseConnection>, jwt: JWT) -> ApiResult<UserInfo> {
+pub async fn get_logged_in_user(
+    db: &State<DatabaseConnection>,
+    jwt: JWT,
+) -> ApiResult<UserResponse> {
     let user_id = jwt.claims.sub;
 
     let user = user::Entity::find_by_id(user_id)
@@ -97,7 +100,7 @@ pub async fn get_logged_in_user(db: &State<DatabaseConnection>, jwt: JWT) -> Api
         .map_err(|_| ApiResponse::internal_error())?
         .ok_or(ApiResponse::internal_error())?;
 
-    let user_info = UserInfo {
+    let user_info = UserResponse {
         is_admin: user.is_admin != 0,
         mail: user.mail,
         name: user.name,

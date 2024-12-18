@@ -17,17 +17,15 @@
     --background-color="var(--primary-color)"
     --padding="15px"
 >
-    <span class="username" class:admin={user.is_admin}
-        >{user.decorative_username}</span
-    >
+    <span class="name" class:admin={user.is_admin}>{user.name}</span>
 </Button>
 
 <style>
-    .username.admin {
+    .name.admin {
         color: rgb(192, 48, 48);
     }
 
-    .username {
+    .name {
         font-weight: 700;
         color: white;
     }

@@ -6,6 +6,14 @@ meta {
 
 post {
   url: {{SERVER_URL}}/api/v1/signup
-  body: none
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "mail": "test@test.com",
+    "password_plain": "1234",
+    "name": "test"
+  }
 }

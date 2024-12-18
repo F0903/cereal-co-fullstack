@@ -5,7 +5,7 @@ use sqlx::types::Decimal;
 
 /// The model to be used for product form submission
 #[derive(DeriveIntoActiveModel, Deserialize, Debug)]
-pub struct FormProduct {
+pub struct ProductForm {
     pub name: String,
     pub description: String,
     pub manufacturer: String,

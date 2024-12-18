@@ -16,12 +16,16 @@
 
     let form: HTMLFormElement;
 
+    let disabledCheckout = $state(false);
+
     let totalPrice = $derived.by(() => {
         const sum = data.cart.calcSum().toFixed(2);
         return sum;
     });
 
     async function onCheckoutClick() {
+        disabledCheckout = true;
+
         const formData = new FormData(form);
 
         const cartItems = data.cart.getItems();
@@ -89,20 +93,37 @@
         </Table>
 
         <form class="shipping-form" bind:this={form}>
-            <InputField name="Name" />
-            <InputField name="Phone" />
+            <InputField
+                name="Name"
+                initial_value={data.loggedIn
+                    ? data.currentUser!.name
+                    : undefined}
+            />
+            <InputField
+                name="Phone"
+                initial_value={data.loggedIn
+                    ? data.currentUser!.phone
+                    : undefined}
+            />
             <InputField
                 name="Mail"
                 initial_value={data.loggedIn
                     ? data.currentUser!.mail
                     : undefined}
             />
-            <InputField name="Address" />
+            <InputField
+                name="Address"
+                initial_value={data.loggedIn
+                    ? data.currentUser!.address
+                    : undefined}
+            />
             <div class="checkout-price-container">
                 <span class="total-price">${totalPrice}</span>
                 <Spacer --margin-bottom="5px" />
-                <Button prefixIcon={faCheck} onclick={onCheckoutClick}
-                    >Purchase</Button
+                <Button
+                    disabled={disabledCheckout}
+                    prefixIcon={faCheck}
+                    onclick={onCheckoutClick}>Purchase</Button
                 >
             </div>
         </form>

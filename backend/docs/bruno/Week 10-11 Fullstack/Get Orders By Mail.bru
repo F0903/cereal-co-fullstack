@@ -1,0 +1,15 @@
+meta {
+  name: Get Orders By Mail
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{SERVER_URL}}/api/v1/orders?mail=admin@admin.com
+  body: none
+  auth: none
+}
+
+params:query {
+  mail: admin@admin.com
+}

@@ -1,7 +1,7 @@
 use super::{
     api_response::{ApiResponse, MessageObject},
     api_result::{ApiResult, ApiResultIntoOk},
-    models::FormProduct,
+    models::ProductForm,
 };
 use crate::{auth::JWT, entities::product};
 use rocket::{serde::json::Json, State};
@@ -36,7 +36,7 @@ pub async fn get_product(db: &State<DatabaseConnection>, id: i32) -> ApiResult<p
 pub async fn add_product(
     jwt: JWT,
     db: &State<DatabaseConnection>,
-    product: Json<FormProduct>,
+    product: Json<ProductForm>,
 ) -> ApiResult<MessageObject> {
     jwt.assert_admin()?;
 
@@ -82,7 +82,7 @@ pub async fn update_product(
     jwt: JWT,
     db: &State<DatabaseConnection>,
     id: i32,
-    new_product: Json<FormProduct>,
+    new_product: Json<ProductForm>,
 ) -> ApiResult<MessageObject> {
     jwt.assert_admin()?;
 

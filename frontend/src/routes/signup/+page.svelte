@@ -1,10 +1,10 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { signup, UserForm } from "$lib/api/auth";
+    import { signup, UserSignupForm } from "$lib/api/auth";
     import Button from "$lib/generic/Button.svelte";
     import ErrorBox from "$lib/generic/ErrorBox.svelte";
     import InputField from "$lib/generic/InputField.svelte";
-    import { assertNotNull } from "$lib/utils/typeUtils";
+    import { AssertionError, assertNotNull } from "$lib/utils/typeUtils";
     import { faPlus } from "@fortawesome/free-solid-svg-icons";
     import type { PageData } from "./$types";
 
@@ -12,7 +12,10 @@
 
     let { data }: { data: PageData } = $props();
 
-    let error: "PasswordNotMatching" | boolean = $state(false);
+    let disableButtons = $state(false);
+
+    let error: "PasswordError" | "MailError" | "NameError" | boolean =
+        $state(false);
     let errorMessage = $state("");
 
     async function onSignUpClick() {
@@ -20,26 +23,43 @@
 
         const formData = new FormData(form);
 
-        const password = assertNotNull(formData.get("Password") as string);
-        const confirmPassword = assertNotNull(
-            formData.get("Confirm Password") as string,
-        );
-
-        if (password !== confirmPassword) {
-            error = "PasswordNotMatching";
-            errorMessage = "Passwords do not match!";
-            return;
-        }
-
-        const userForm: UserForm = {
-            mail: assertNotNull(formData.get("Mail") as string),
-            password_plain: password,
-        };
-
         try {
-            await signup(userForm);
+            const password = assertNotNull(
+                formData.get("Password") as string,
+                "Password cannot be empty!",
+                "PasswordError",
+            );
+            const confirmPassword = formData.get("Confirm Password") as string;
+
+            if (password !== confirmPassword) {
+                error = "PasswordError";
+                errorMessage = "Passwords do not match!";
+                return;
+            }
+
+            const signupForm: UserSignupForm = {
+                mail: assertNotNull(
+                    formData.get("Mail") as string,
+                    "Mail cannot be empty!",
+                    "MailError",
+                ),
+                password_plain: password,
+                name: assertNotNull(
+                    formData.get("Name") as string,
+                    "Name cannot be empty!",
+                    "NameError",
+                ),
+                address: formData.get("Address") as string,
+                phone: formData.get("Phone") as string,
+            };
+
+            disableButtons = true;
+            await signup(signupForm);
         } catch (err) {
-            if (err instanceof Error) {
+            disableButtons = false;
+
+            if (err instanceof AssertionError) {
+                error = (err.failureName as any) ?? true;
                 errorMessage = err.message;
                 return;
             }
@@ -55,19 +75,30 @@
 
 <form class="singup-container" bind:this={form}>
     <h1>Sign Up</h1>
-    <InputField name="Mail" input_type="email" />
+    <InputField
+        name="Mail"
+        input_type="email"
+        has_input_error={error === "MailError"}
+    />
+    <InputField name="Name" has_input_error={error === "NameError"} />
+    <InputField name="Address" optional />
+    <InputField name="Phone" optional pattern="\+?(\d*)" />
     <InputField
         name="Password"
         input_type="password"
-        has_input_error={error === "PasswordNotMatching"}
+        has_input_error={error === "PasswordError"}
     />
     <InputField
         name="Confirm Password"
         input_type="password"
-        has_input_error={error === "PasswordNotMatching"}
+        has_input_error={error === "PasswordError"}
     />
     <div class="buttons-container">
-        <Button prefixIcon={faPlus} onclick={onSignUpClick}>Sign Up</Button>
+        <Button
+            disabled={disableButtons}
+            prefixIcon={faPlus}
+            onclick={onSignUpClick}>Sign Up</Button
+        >
     </div>
     {#if error}
         <ErrorBox message={errorMessage} />

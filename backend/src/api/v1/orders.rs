@@ -1,7 +1,7 @@
 use super::{
     api_response::{ApiResponse, IdObject},
     api_result::{ApiResult, ApiResultIntoError, ApiResultIntoOk},
-    models::{FormOrder, OrderInfo},
+    models::{OrderForm, OrderResponse},
 };
 use crate::{
     auth::JWT,
@@ -13,7 +13,7 @@ use sea_orm::{entity::*, query::*, DatabaseConnection};
 #[post("/orders", format = "json", data = "<order_form>")]
 pub async fn add_order(
     db: &State<DatabaseConnection>,
-    order_form: Json<FormOrder>,
+    order_form: Json<OrderForm>,
 ) -> ApiResult<IdObject> {
     // In a real world web store, there would be some sort of payment id check here.
 
@@ -51,7 +51,11 @@ pub async fn add_order(
 }
 
 #[get("/orders/<id>")]
-pub async fn get_order(jwt: JWT, db: &State<DatabaseConnection>, id: i32) -> ApiResult<OrderInfo> {
+pub async fn get_order(
+    jwt: JWT,
+    db: &State<DatabaseConnection>,
+    id: i32,
+) -> ApiResult<OrderResponse> {
     let orders = order::Entity::find_by_id(id)
         .find_with_related(order_item::Entity)
         .all(db.inner())
@@ -72,7 +76,7 @@ pub async fn get_order(jwt: JWT, db: &State<DatabaseConnection>, id: i32) -> Api
         return ApiResponse::unauthorized().into_error();
     }
 
-    let order_info = OrderInfo::create_from_orm_model(order.clone(), order_items);
+    let order_info = OrderResponse::create_from_orm_model(order.clone(), order_items);
 
     ApiResponse::ok(order_info).into_ok()
 }
@@ -82,7 +86,7 @@ pub async fn get_orders_by_mail(
     jwt: JWT,
     db: &State<DatabaseConnection>,
     mail: &str,
-) -> ApiResult<Vec<OrderInfo>> {
+) -> ApiResult<Vec<OrderResponse>> {
     let calling_user = user::Entity::find_by_id(jwt.claims.sub)
         .one(db.inner())
         .await
@@ -105,7 +109,7 @@ pub async fn get_orders_by_mail(
 
     let order_infos = orders
         .into_iter()
-        .map(|(order, order_items)| OrderInfo::create_from_orm_model(order, &order_items))
+        .map(|(order, order_items)| OrderResponse::create_from_orm_model(order, &order_items))
         .collect();
 
     ApiResponse::ok(order_infos).into_ok()

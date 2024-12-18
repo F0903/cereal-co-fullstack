@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 
-// The form model to receive
 #[derive(Deserialize)]
-pub struct UserForm {
+pub struct UserSignupForm {
     pub mail: String,
     pub password_plain: String,
     pub name: String,
@@ -10,9 +9,14 @@ pub struct UserForm {
     pub phone: Option<String>,
 }
 
-// The form model to send
+#[derive(Deserialize)]
+pub struct UserLoginForm {
+    pub mail: String,
+    pub password_plain: String,
+}
+
 #[derive(Serialize)]
-pub struct UserInfo {
+pub struct UserResponse {
     pub mail: String,
     pub name: String,
     pub address: Option<String>,
