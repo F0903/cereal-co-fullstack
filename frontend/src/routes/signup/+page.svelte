@@ -86,40 +86,42 @@
     }
 </script>
 
-<div class="form-container">
-    <h1>Sign Up</h1>
-    {#if error}
-        <ErrorBox message={errorMessage} --margin-bottom="25px" />
-    {/if}
-    <form class="singup-container" bind:this={form}>
-        <InputField
-            name="Mail"
-            input_type="email"
-            has_input_error={error === "MailError"}
-        />
-        <InputField name="Name" has_input_error={error === "NameError"} />
-        <InputField name="Address" optional />
-        <InputField name="Phone" optional pattern="\+?(\d*)" />
-        <InputField
-            name="Password"
-            input_type="password"
-            has_input_error={error === "PasswordError"}
-        />
-        <InputField
-            name="Confirm Password"
-            input_type="password"
-            has_input_error={error === "PasswordError"}
-        />
-        <Button
-            disabled={disableButtons}
-            prefixIcon={faPlus}
-            onclick={onSignUpClick}
-            --width="fit-content"
-            --font-size="1.2em"
-            --padding="15px"
-            --margin="15px auto">Sign Up</Button
-        >
-    </form>
+<div class="form-wrapper">
+    <div class="form-container">
+        <h1>Sign Up</h1>
+        {#if error}
+            <ErrorBox message={errorMessage} --margin-bottom="25px" />
+        {/if}
+        <form class="singup-container" bind:this={form}>
+            <InputField
+                name="Mail"
+                input_type="email"
+                has_input_error={error === "MailError"}
+            />
+            <InputField name="Name" has_input_error={error === "NameError"} />
+            <InputField name="Address" optional />
+            <InputField name="Phone" optional pattern="\+?(\d*)" />
+            <InputField
+                name="Password"
+                input_type="password"
+                has_input_error={error === "PasswordError"}
+            />
+            <InputField
+                name="Confirm Password"
+                input_type="password"
+                has_input_error={error === "PasswordError"}
+            />
+            <Button
+                disabled={disableButtons}
+                prefixIcon={faPlus}
+                onclick={onSignUpClick}
+                --width="fit-content"
+                --font-size="1.2em"
+                --padding="15px"
+                --margin="15px auto">Sign Up</Button
+            >
+        </form>
+    </div>
 </div>
 
 <style>
@@ -135,10 +137,21 @@
 
     .form-container {
         background-color: var(--secondary-color);
-        margin: auto;
-        margin-top: 150px;
-        max-width: 500px;
+
+        min-width: 300px;
+        width: 500px;
+        max-width: 1000px;
         padding: 50px;
         border-radius: 15px;
+    }
+
+    .form-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+
+        height: 100%;
     }
 </style>

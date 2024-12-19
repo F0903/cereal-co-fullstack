@@ -62,41 +62,43 @@
     }
 </script>
 
-<div class="form-container">
-    <h1>Log In</h1>
-    {#if error}
-        <ErrorBox message={errorMessage} --margin-bottom="25px" />
-    {/if}
-    <form class="login-container" bind:this={form} onsubmit={onLoginClick}>
-        <InputField
-            name="Mail"
-            input_type="email"
-            has_input_error={error === "MailError"}
-        />
-        <InputField
-            name="Password"
-            input_type="password"
-            has_input_error={error === "PasswordError"}
-        />
+<div class="form-wrapper">
+    <div class="form-container">
+        <h1>Log In</h1>
+        {#if error}
+            <ErrorBox message={errorMessage} --margin-bottom="25px" />
+        {/if}
+        <form class="login-container" bind:this={form} onsubmit={onLoginClick}>
+            <InputField
+                name="Mail"
+                input_type="email"
+                has_input_error={error === "MailError"}
+            />
+            <InputField
+                name="Password"
+                input_type="password"
+                has_input_error={error === "PasswordError"}
+            />
+            <Button
+                disabled={disableButtons}
+                prefixIcon={faLockOpen}
+                onclick={onLoginClick}
+                --width="fit-content"
+                --padding="15px"
+                --font-size="1.2em"
+                --margin="15px auto 0px auto">Login</Button
+            >
+        </form>
         <Button
             disabled={disableButtons}
-            prefixIcon={faLockOpen}
-            onclick={onLoginClick}
+            prefixIcon={faPlus}
+            onclick={() => goto("/signup?redirect=/login")}
+            --background-color="var(--primary-color)"
             --width="fit-content"
-            --padding="15px"
-            --font-size="1.2em"
-            --margin="15px auto 0px auto">Login</Button
+            --margin="15px auto 0px auto"
+            --font-size="1em">Sign Up</Button
         >
-    </form>
-    <Button
-        disabled={disableButtons}
-        prefixIcon={faPlus}
-        onclick={() => goto("/signup?redirect=/login")}
-        --background-color="var(--primary-color)"
-        --width="fit-content"
-        --margin="15px auto 0px auto"
-        --font-size="1em">Sign Up</Button
-    >
+    </div>
 </div>
 
 <style>
@@ -113,9 +115,13 @@
     .form-container {
         background-color: var(--secondary-color);
         margin: auto;
-        margin-top: 150px;
         max-width: 500px;
         padding: 50px;
+
         border-radius: 15px;
+    }
+
+    .form-wrapper {
+        padding-top: 150px;
     }
 </style>

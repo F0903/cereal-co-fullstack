@@ -9,23 +9,25 @@
     let viewSelection = $state("Details");
 </script>
 
-<div class="user-view-container">
-    <div class="user-view-select-container">
-        <ListSelection
-            title="options"
-            options={["Details", "Orders"]}
-            bind:selection={viewSelection}
-        />
-    </div>
-    {#if data.loggedIn}
-        <div class="user-view">
-            {#if viewSelection === "Details"}
-                <UserDetails user={data.currentUser!} />
-            {:else if viewSelection === "Orders"}
-                <UserOrders user={data.currentUser!} />
-            {/if}
+<div class="user-view-wrapper">
+    <div class="user-view-container">
+        <div class="user-view-select-container">
+            <ListSelection
+                title="options"
+                options={["Details", "Orders"]}
+                bind:selection={viewSelection}
+            />
         </div>
-    {/if}
+        {#if data.loggedIn}
+            <div class="user-view">
+                {#if viewSelection === "Details"}
+                    <UserDetails user={data.currentUser!} />
+                {:else if viewSelection === "Orders"}
+                    <UserOrders user={data.currentUser!} />
+                {/if}
+            </div>
+        {/if}
+    </div>
 </div>
 
 <style>
@@ -50,7 +52,6 @@
 
         margin-left: auto;
         margin-right: auto;
-        margin-top: 50px;
 
         min-height: 500px;
         max-height: 85vh;
@@ -58,12 +59,14 @@
 
         border-radius: 15px;
 
-        box-sizing: border-box;
-
         display: flex;
         flex-direction: row;
         align-items: stretch;
 
         overflow: hidden;
+    }
+
+    .user-view-wrapper {
+        padding-top: 50px;
     }
 </style>
