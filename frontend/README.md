@@ -8,7 +8,7 @@ To build the Docker image, make sure you set up the required environment variabl
 
 The required environment variables are as follows:
 
--   PUBLIC_BACKEND_URL
+- PUBLIC_BACKEND_URL
 
 ## Building frontend
 
