@@ -87,25 +87,29 @@
                     </td>
                     <td>
                         <input
+                            class="very-wide-input"
                             type="text"
                             bind:value={editable.product.image_url}
                         />
                     </td>
                     <td
                         ><input
+                            class="wide-input"
                             type="text"
                             bind:value={editable.product.name}
                         /></td
                     >
                     <td
                         ><input
+                            class="very-wide-input"
                             type="text"
                             bind:value={editable.product.description}
                         /></td
                     >
                     <td
                         ><input
-                            type="text"
+                            class="wide-input"
+                            type="text "
                             bind:value={editable.product.manufacturer}
                         /></td
                     >
@@ -144,6 +148,14 @@
 </div>
 
 <style>
+    .very-wide-input {
+        min-width: 300px;
+    }
+
+    .wide-input {
+        min-width: 200px;
+    }
+
     input {
         width: 100%;
         background-color: rgb(63, 63, 63);

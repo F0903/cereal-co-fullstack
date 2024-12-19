@@ -1,10 +1,7 @@
 <script lang="ts">
     import ProductEditor from "$lib/admin-dashboard/widgets/ProductEditor.svelte";
     import ListSelection from "$lib/generic/ListSelection.svelte";
-    import { onMount } from "svelte";
     import type { PageData } from "./$types";
-    import { error } from "@sveltejs/kit";
-    import { goto } from "$app/navigation";
 
     let { data }: { data: PageData } = $props();
 
