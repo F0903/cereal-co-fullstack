@@ -1,6 +1,6 @@
 # Cereal Co. Week 10-11 Fullstack Project
 
-The Cereal Co. week 10-11 fullstack assignment of Specialisterne. Made with Rust and Svelte.
+The week 10-11 fullstack assignment of Specialisterne. Made with Rust and Svelte.
 
 ## Running
 
