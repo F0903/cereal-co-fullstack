@@ -21,58 +21,62 @@
     }
 </script>
 
-<div class="product-container">
-    <div class="content-container-row">
-        <div class="image-container">
-            <Image
-                src={getFullImageUrl(data.product.image_url)}
-                alt="Image of {data.product.name}"
-            />
-        </div>
-
-        <div class="content-column">
-            <h2>{data.product.name}</h2>
-            <Spacer center={false} />
-            <p class="description">{data.product.description}</p>
-            <Spacer
-                --color="var(--primary-color)"
-                --spacing="50px"
-                --width="50%"
-            />
-            <div class="product-attributes">
-                <h3 class="product-attributes-title">Additional Information</h3>
-                {#each Object.entries(data.product.attributes) as [name, value]}
-                    <div class="product-attribute">
-                        <span class="product-attribute-name">{name}: </span>
-                        <span class="product-attribute-value">{value}</span>
-                        <br />
-                    </div>
-                {/each}
+<div class="product-wrapper">
+    <div class="product-container">
+        <div class="content-container-row">
+            <div class="image-container">
+                <Image
+                    src={getFullImageUrl(data.product.image_url)}
+                    alt="Image of {data.product.name}"
+                />
             </div>
-        </div>
 
-        <div class="buy-section">
-            <span class="product-price">${data.product.price}</span>
-            <Spacer
-                --color="var(--secondary-color)"
-                --spacing="0px"
-                --margin-top="-2px"
-                --margin-bottom="3px"
-            />
-            <Button
-                prefixIcon={faShoppingCart}
-                onclick={onAddClick}
-                --font-size="1.1em"
-                --padding="7px"
-                --border-radius="8px">Buy</Button
-            >
-            <span
-                class="stock-value"
-                class:good-stock={stockStatus === "Good"}
-                class:limited-stock={stockStatus === "Limited"}
-                class:empty-stock={stockStatus === "Empty"}
-                >{data.product.quantity} in stock</span
-            >
+            <div class="content-column">
+                <h2>{data.product.name}</h2>
+                <Spacer center={false} />
+                <p class="description">{data.product.description}</p>
+                <Spacer
+                    --color="var(--primary-color)"
+                    --spacing="50px"
+                    --width="50%"
+                />
+                <div class="product-attributes">
+                    <h3 class="product-attributes-title">
+                        Additional Information
+                    </h3>
+                    {#each Object.entries(data.product.attributes) as [name, value]}
+                        <div class="product-attribute">
+                            <span class="product-attribute-name">{name}: </span>
+                            <span class="product-attribute-value">{value}</span>
+                            <br />
+                        </div>
+                    {/each}
+                </div>
+            </div>
+
+            <div class="buy-section">
+                <span class="product-price">${data.product.price}</span>
+                <Spacer
+                    --color="var(--secondary-color)"
+                    --spacing="0px"
+                    --margin-top="-2px"
+                    --margin-bottom="3px"
+                />
+                <Button
+                    prefixIcon={faShoppingCart}
+                    onclick={onAddClick}
+                    --font-size="1.1em"
+                    --padding="7px"
+                    --border-radius="8px">Buy</Button
+                >
+                <span
+                    class="stock-value"
+                    class:good-stock={stockStatus === "Good"}
+                    class:limited-stock={stockStatus === "Limited"}
+                    class:empty-stock={stockStatus === "Empty"}
+                    >{data.product.quantity} in stock</span
+                >
+            </div>
         </div>
     </div>
 </div>
@@ -166,7 +170,7 @@
     }
 
     .product-container {
-        margin: 50px auto;
+        margin: auto;
         padding: 75px;
         padding-top: 50px;
         max-width: 1250px;
@@ -174,5 +178,9 @@
 
         border-radius: 20px;
         background-color: var(--secondary-color);
+    }
+
+    .product-wrapper {
+        padding: 75px;
     }
 </style>

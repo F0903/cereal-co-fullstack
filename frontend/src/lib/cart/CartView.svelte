@@ -31,20 +31,23 @@
                     --border-radius="7px"
                 />
                 <h4 class="product-name">{item.product.name}</h4>
-                <Counter
-                    value={item.quantity}
-                    on_value_changed={(newVal) => {
-                        cart.modifyItem(
-                            item.product.id,
-                            (itm: CartItem) => (itm.quantity = newVal),
-                        );
-                    }}
-                    on_negative_value_callback={() => {
-                        cart.removeItem(item.product.id);
-                    }}
-                    --background-color="var(--secondary-color)"
-                    --seperator-color="var(--tertiary-color)"
-                />
+                <div class="counter-container">
+                    <Counter
+                        value={item.quantity}
+                        on_value_changed={(newVal) => {
+                            cart.modifyItem(
+                                item.product.id,
+                                (itm: CartItem) => (itm.quantity = newVal),
+                            );
+                        }}
+                        on_negative_value_callback={() => {
+                            cart.removeItem(item.product.id);
+                        }}
+                        --background-color="var(--secondary-color)"
+                        --seperator-color="var(--tertiary-color)"
+                    />
+                </div>
+
                 <span class="price-text"
                     >${(item.product.price * item.quantity).toFixed(2)}</span
                 >
@@ -68,9 +71,16 @@
 </div>
 
 <style>
+    .counter-container {
+        float: right;
+        justify-self: flex-end;
+    }
+
     .price-text {
         font-family: "Roboto Slab Variable";
         font-weight: 700;
+        width: 50px;
+        text-align: center;
     }
 
     .total-price-container {
@@ -91,6 +101,7 @@
 
     .product-name {
         text-align: center;
+        width: 90px;
     }
 
     .cart-item {

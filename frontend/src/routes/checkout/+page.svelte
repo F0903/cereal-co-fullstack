@@ -197,5 +197,6 @@
         align-items: center;
 
         height: 100%;
+        padding: 50px;
     }
 </style>
