@@ -11,6 +11,7 @@
     h2 {
         padding-bottom: 1px;
         border-bottom: 3px solid;
+        margin-bottom: 10px;
         width: fit-content;
     }
 

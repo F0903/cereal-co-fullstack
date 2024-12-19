@@ -9,12 +9,14 @@
         disabled,
         hoverAnimation = true,
         prefixIcon = undefined,
+        prefixIconColor = undefined,
     }: {
         children: Snippet;
         onclick: (event: Event) => void;
         disabled?: boolean;
         hoverAnimation?: boolean;
         prefixIcon?: IconDefinition;
+        prefixIconColor?: string;
     } = $props();
 </script>
 
@@ -26,7 +28,7 @@
     onkeypress={onclick}
 >
     {#if prefixIcon}
-        <Fa icon={prefixIcon} />
+        <Fa icon={prefixIcon} color={prefixIconColor} />
     {/if}
     {@render children()}
 </button>

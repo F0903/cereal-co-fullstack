@@ -2,7 +2,8 @@
     import { goto } from "$app/navigation";
     import type { UserInfo } from "$lib/api/auth";
     import Button from "$lib/generic/Button.svelte";
-    import { faRefresh } from "@fortawesome/free-solid-svg-icons";
+    import Spacer from "$lib/generic/Spacer.svelte";
+    import { faCog, faRefresh } from "@fortawesome/free-solid-svg-icons";
 
     let { user }: { user: UserInfo } = $props();
 </script>
@@ -22,6 +23,11 @@
         <div class="phone">
             <span class="value-title">Phone:</span><span>{user.phone}</span>
         </div>
+        <Spacer
+            --margin-top="25px"
+            --margin-bottom="5px"
+            --color="var(--primary-color)"
+        />
         <div class="buttons">
             <Button
                 prefixIcon={faRefresh}
@@ -30,20 +36,37 @@
                 --background-color="var(--primary-color)"
                 >Change Password</Button
             >
+            {#if user.is_admin}
+                <Button
+                    prefixIcon={faCog}
+                    prefixIconColor="var(--admin-color)"
+                    onclick={() => goto("/admin")}
+                    --width="fit-content"
+                    --background-color="var(--primary-color)"
+                    >Admin Dashboard</Button
+                >
+            {/if}
         </div>
     </div>
 </div>
 
 <style>
     .buttons {
-        margin-top: 20px;
         padding: 0px 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-sizing: border-box;
     }
 
     .content-column {
         display: flex;
         flex-direction: column;
         gap: 5px;
+        box-sizing: border-box;
+        height: 100%;
     }
 
     .value-title {
@@ -52,9 +75,15 @@
     }
 
     h2 {
-        margin-bottom: 20px;
+        padding-top: 25px;
+        margin-bottom: 25px;
         padding-bottom: 2px;
-        border-bottom: 2px solid var(--tertiary-color);
+        font-size: 1.8em;
         width: fit-content;
+    }
+
+    .user-details {
+        box-sizing: border-box;
+        min-height: 95%;
     }
 </style>

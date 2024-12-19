@@ -25,7 +25,7 @@
         onclick={onImageClick}
     />
     <h2 class="name">{product.name}</h2>
-    <Spacer --color="hsl(0, 0%, 25%)" --margin-top="auto" />
+    <Spacer --color="hsl(0, 0%, 25%)" --margin-top="auto" --spacing="7px" />
     <div class="buy-container">
         <span class="price">${product.price}</span>
         <Button onclick={onAddClick}>Add</Button>
@@ -48,7 +48,7 @@
 
     .name {
         font-weight: 600;
-        margin-bottom: 0px;
+        margin-top: 15px;
         text-align: center;
     }
 

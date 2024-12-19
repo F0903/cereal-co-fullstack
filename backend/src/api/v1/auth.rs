@@ -41,10 +41,8 @@ pub async fn signup(
         ..Default::default()
     };
 
-    user::Entity::insert(user_model)
-        .exec(db.inner())
-        .await
-        .map_err(|_| ApiResponse::internal_error())?;
+    // Will automatically return conflict if a record exists.
+    user::Entity::insert(user_model).exec(db.inner()).await?;
 
     ApiResponse::success().into_ok()
 }

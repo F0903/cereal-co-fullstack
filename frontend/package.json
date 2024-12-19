@@ -25,6 +25,7 @@
         "@fontsource-variable/roboto-flex": "^5.1.0",
         "@fontsource-variable/roboto-slab": "^5.1.0",
         "@fortawesome/free-solid-svg-icons": "^6.7.1",
-        "svelte-fa": "^4.0.3"
+        "svelte-fa": "^4.0.3",
+        "svelte-jsoneditor": "^2.3.3"
     }
 }

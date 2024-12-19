@@ -11,7 +11,7 @@
 </script>
 
 <Header>
-    <h1>User Dashboard</h1>
+    <h1>Admin Dashboard</h1>
     <div class="buttons-container">
         <Button
             prefixIcon={faHome}

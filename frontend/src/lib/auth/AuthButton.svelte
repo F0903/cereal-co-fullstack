@@ -36,6 +36,3 @@
 {:else}
     {@render button("Log in", faLockOpen, onLogInClick)}
 {/if}
-
-<style>
-</style>

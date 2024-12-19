@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <Spacer --margin-top="25px" --width="85%" --thickness="1px" />
+    <Spacer --spacing="20px" --width="85%" --thickness="1px" />
 
     <div class="order-table">
         <h4 class="order-table-title">Order Items</h4>
@@ -45,6 +45,14 @@
 </div>
 
 <style>
+    h4 {
+        margin-bottom: 10px;
+    }
+
+    h3 {
+        margin-bottom: 15px;
+    }
+
     .total-text {
         font-family: "Roboto Slab Variable", serif;
         font-weight: 600;

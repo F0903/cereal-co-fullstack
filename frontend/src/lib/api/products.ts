@@ -28,8 +28,8 @@ export async function getSingleProduct(id: number): Promise<Product> {
     return resp.json();
 }
 
-export async function setSingleProduct(id: number, product: Product) {
-    await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/products/${id}`, {
+export async function updateSingleProduct(product: Product) {
+    await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/products/${product.id}`, {
         method: "PUT",
         body: JSON.stringify(product),
         headers: {

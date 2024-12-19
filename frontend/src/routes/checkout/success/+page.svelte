@@ -12,6 +12,11 @@
 </div>
 
 <style>
+    h1 {
+        width: fit-content;
+        border-bottom: 3px solid var(--tertiary-color);
+    }
+
     .return-button-container {
         margin-top: 15px;
     }
@@ -21,6 +26,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        gap: 25px;
 
         max-width: 500px;
         margin: auto;

@@ -30,9 +30,10 @@
     }
 
     h2 {
-        margin-bottom: 20px;
+        padding-top: 25px;
+        margin-bottom: 25px;
         padding-bottom: 2px;
-        border-bottom: 2px solid var(--tertiary-color);
+        font-size: 1.8em;
         width: fit-content;
     }
 </style>

@@ -3,12 +3,9 @@
     import Cart from "$lib/cart/CartView.svelte";
     import CartButton from "$lib/cart/CartButton.svelte";
     import { clickOutside } from "$lib/utils/clickOutside.svelte";
-    import AuthButton from "$lib/user/AuthButton.svelte";
     import { fly } from "svelte/transition";
-    import UserButton from "$lib/user/UserButton.svelte";
     import Header from "$lib/generic/Header.svelte";
-    import HorizontalSpacer from "$lib/generic/HorizontalSpacer.svelte";
-    import AuthContainer from "$lib/user/AuthContainer.svelte";
+    import AuthContainer from "$lib/auth/AuthContainer.svelte";
 
     let { data, children } = $props();
 

@@ -100,6 +100,10 @@
 </div>
 
 <style>
+    h1 {
+        margin-bottom: 20px;
+    }
+
     form {
         display: flex;
         flex-direction: column;

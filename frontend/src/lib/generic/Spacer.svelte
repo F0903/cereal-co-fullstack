@@ -19,5 +19,6 @@
         margin-top: var(--margin-top, 0px);
         margin-bottom: var(--margin-bottom, 0px);
         padding: var(--spacing, 5px) 0px;
+        box-sizing: content-box;
     }
 </style>

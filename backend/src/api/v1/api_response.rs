@@ -44,6 +44,10 @@ impl ApiResponse<ApiError> {
     pub fn unauthorized() -> Self {
         Self::err(Status::Unauthorized)
     }
+
+    pub fn conflict() -> Self {
+        Self::err(Status::Conflict)
+    }
 }
 
 impl ApiResponse<MessageObject> {

@@ -1,7 +1,7 @@
 <script lang="ts">
     import ListSelection from "$lib/generic/ListSelection.svelte";
-    import UserDetails from "$lib/user/widgets/UserDetails.svelte";
-    import UserOrders from "$lib/user/widgets/UserOrders.svelte";
+    import UserDetails from "$lib/user-dashboard/widgets/UserDetails.svelte";
+    import UserOrders from "$lib/user-dashboard/widgets/UserOrders.svelte";
     import type { PageData } from "./$types";
 
     let { data }: { data: PageData } = $props();

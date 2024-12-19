@@ -7,6 +7,7 @@
     import { AssertionError, assertNotNull } from "$lib/utils/typeUtils";
     import { faPlus } from "@fortawesome/free-solid-svg-icons";
     import type { PageData } from "./$types";
+    import { ApiError } from "$lib/api/errors";
 
     let form: HTMLFormElement;
 
@@ -60,6 +61,16 @@
         } catch (err) {
             disableButtons = false;
 
+            if (err instanceof ApiError) {
+                if (err.statusCode == 409) {
+                    error = "MailError";
+                    errorMessage = "A user already exists with this mail.";
+                    return;
+                }
+
+                error = true;
+                errorMessage = err.message;
+            }
             if (err instanceof AssertionError) {
                 error = (err.failureName as any) ?? true;
                 errorMessage = err.message;
@@ -112,6 +123,10 @@
 </div>
 
 <style>
+    h1 {
+        margin-bottom: 20px;
+    }
+
     form {
         display: flex;
         flex-direction: column;

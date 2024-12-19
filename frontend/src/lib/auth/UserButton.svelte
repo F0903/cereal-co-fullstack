@@ -23,7 +23,7 @@
 
 <style>
     .name.admin {
-        color: rgb(192, 48, 48);
+        color: var(--admin-color);
     }
 
     .name {

@@ -1,3 +1,5 @@
+use sea_orm::DbErr;
+
 use super::api_response::{ApiError, ApiResponse};
 
 pub type ApiResult<T> = Result<ApiResponse<T>, ApiResponse<ApiError>>;
@@ -19,5 +21,18 @@ impl<T> ApiResultIntoOk<T> for ApiResponse<T> {
 impl<T> ApiResultIntoError<T> for ApiResponse<ApiError> {
     fn into_error(self) -> ApiResult<T> {
         ApiResult::Err(self)
+    }
+}
+
+impl From<DbErr> for ApiResponse<ApiError> {
+    fn from(value: DbErr) -> Self {
+        match value.sql_err() {
+            None => Self::internal_error(),
+            Some(err) => match err {
+                sea_orm::SqlErr::UniqueConstraintViolation(_) => Self::conflict(),
+                sea_orm::SqlErr::ForeignKeyConstraintViolation(_) => Self::conflict(),
+                _ => Self::internal_error(),
+            },
+        }
     }
 }

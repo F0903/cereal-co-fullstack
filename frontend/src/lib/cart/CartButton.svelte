@@ -20,6 +20,3 @@
         >${cart.getDisplayableTotalSum()}</Button
     >
 {/if}
-
-<style>
-</style>

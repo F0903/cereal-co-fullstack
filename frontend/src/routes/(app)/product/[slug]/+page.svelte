@@ -110,6 +110,10 @@
         color: hsl(120, 36%, 31%);
     }
 
+    .stock-value {
+        text-align: center;
+    }
+
     .product-attribute-name {
         font-weight: 800;
     }
@@ -129,6 +133,7 @@
 
     .product-attributes-title {
         margin-top: 5px;
+        margin-bottom: 10px;
     }
 
     .product-attributes {
