@@ -1,9 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import Button from "$lib/generic/Button.svelte";
-    import type { PageData } from "./$types";
-
-    let { data }: { data: PageData } = $props();
 </script>
 
 <div class="success-container">

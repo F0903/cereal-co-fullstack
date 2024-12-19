@@ -1,6 +1,5 @@
-import { goto } from "$app/navigation";
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
-import { ApiError, assertOk } from "./errors";
+import { assertOk } from "./errors";
 
 export function getFullImageUrl(path: string): string {
     return PUBLIC_BACKEND_URL + path;

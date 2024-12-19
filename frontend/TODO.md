@@ -1,5 +1,4 @@
 # TODO
 
--   Finish polishing user dashboard.
--   Make user able to change password or other details.
+-   Setup docker containers
 -   Admin dashboard (able to edit products)

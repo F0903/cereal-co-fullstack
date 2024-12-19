@@ -6,12 +6,8 @@ from typing import Self
 import urllib.parse
 import lorem
 import mysql.connector as mysql
-import sys
 import urllib
-
-db = mysql.connect(host="localhost", user="root", password="root", database="week10")
-
-TABLE_NAME = "product"
+import argparse
 
 
 @dataclass
@@ -40,7 +36,7 @@ class Product:
 def insert_into_db(product: Product):
     with db.cursor() as cur:
         cur.execute(
-            f"""INSERT INTO `{TABLE_NAME}`
+            f"""INSERT INTO `{table_name}`
                 (
                     name,
                     description,
@@ -116,6 +112,51 @@ def read_csv_and_process(filename: str):
         print(f"An error occurred: {e}")
 
 
+def assert_database(db_name: str):
+    with db.cursor() as cur:
+        cur.execute(f"CREATE DATABASE IF NOT EXISTS `{db_name}`")
+        cur.execute("USE week10")
+    db.commit()
+
+
+def assert_table(table_name: str):
+    with db.cursor() as cur:
+        cur.execute(f"CREATE TABLE IF NOT EXISTS `{table_name}`")
+    db.commit()
+
+
 if __name__ == "__main__":
-    csv_filename = sys.argv[1]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("file")
+    parser.add_argument("--db_host")
+    parser.add_argument("--db_user")
+    parser.add_argument("--db_pass")
+    parser.add_argument("--db_port")
+    parser.add_argument("--db_database")
+    parser.add_argument("--db_table")
+
+    parser.set_defaults(
+        db_host="localhost",
+        db_user="root",
+        db_pass="root",
+        db_port="3603",
+        db_database="week10",
+        db_table="product",
+    )
+
+    args = parser.parse_args()
+    csv_filename = args.file
+    table_name = args.db_table
+
+    db = mysql.connect(
+        host=args.db_host,
+        user=args.db_user,
+        password=args.db_pass,
+        port=args.db_port,
+    )
+
+    # Must occur after db creation
+    database = args.db_database
+    assert_database(database)
+
     read_csv_and_process(csv_filename)

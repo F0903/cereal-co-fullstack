@@ -8,6 +8,16 @@ To import CSV data, use the provided import_from_csv.py script as follows:
 py import_from_csv.py **path_to_your_csv.csv**
 ```
 
+### Importing CSV Data to Dockerized DB
+
+To import CSV data to a Dockerized database, you can use the provided import_from_csv.py script as follows:
+
+If you have changed the database user, password or database name, you will obviously have to modify this command to reflect that.
+
+```sh
+py migration/import_from_csv.py migration/example-data/Cereal.csv --db_host=localhost --db_user=root --db_pass=root --db_port=3636 --db_database=week10
+```
+
 ## Sea-ORM Migration instructions
 
 - Generate a new migration file

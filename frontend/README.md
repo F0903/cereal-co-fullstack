@@ -1,38 +1,43 @@
-# sv
+# Cereal Co. Frontend
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+The frontend for the Week 10-11 Specialisterne assignment.
 
-## Creating a project
+## Building Docker image
 
-If you're seeing this, you've probably already done this step. Congrats!
+To build the Docker image, make sure you set up the required environment variables in the `.docker.env` file
 
-```bash
-# create a new project in the current directory
-npx sv create
+The required environment variables are as follows:
 
-# create a new project in my-app
-npx sv create my-app
-```
+-   PUBLIC_BACKEND_URL
 
-## Developing
+## Building frontend
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+To build the frontend, you can run the following commands:
+
+deno:
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+deno task build
 ```
 
-## Building
-
-To create a production version of your app:
+npm:
 
 ```bash
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
+## Running in development mode
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+To run the frontend in development mode, you can run the following commands:
+
+deno:
+
+```bash
+deno task dev
+```
+
+npm:
+
+```bash
+npm run dev
+```

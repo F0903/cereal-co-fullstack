@@ -48,8 +48,8 @@
             order_items: orderItems,
         };
 
-        const orderId = await addOrder(order);
-        await goto(`/checkout/success/${orderId}`);
+        await addOrder(order);
+        await goto(`/checkout/success`);
         cart.clear();
     }
 </script>
