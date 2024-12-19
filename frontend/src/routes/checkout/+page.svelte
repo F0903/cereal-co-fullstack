@@ -86,8 +86,8 @@
                             </td>
                             <td>{item.product.name}</td>
                             <td>{item.quantity}</td>
-                            <td>${item.product.price}</td>
-                            <td
+                            <td class="item-price">${item.product.price}</td>
+                            <td class="item-total-price"
                                 >${(item.quantity * item.product.price).toFixed(
                                     2,
                                 )}</td
@@ -137,6 +137,10 @@
 </div>
 
 <style>
+    .item-total-price {
+        font-weight: 600;
+    }
+
     .checkout-row {
         display: flex;
         flex-direction: row;

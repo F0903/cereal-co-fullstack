@@ -42,9 +42,17 @@
                     <td>{product.name}</td>
                     <td>{item.quantity}</td>
                     <td>${product.price}</td>
-                    <td>${(item.quantity * product.price).toFixed(2)}</td>
+                    <td class="item-total-price"
+                        >${(item.quantity * product.price).toFixed(2)}</td
+                    >
                 </tr>
             {/await}
         {/each}
     </tbody>
 </Table>
+
+<style>
+    .item-total-price {
+        font-weight: 600;
+    }
+</style>
