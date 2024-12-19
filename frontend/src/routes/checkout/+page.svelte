@@ -56,11 +56,13 @@
 
 <div class="checkout-wrapper">
     <div class="checkout">
-        <h1>Checkout</h1>
-        <Spacer --margin-bottom="50px" --width="10%" />
+        <div class="checkout-title-container">
+            <h1>Checkout</h1>
+            <Spacer --margin-bottom="50px" --width="50%" />
+        </div>
 
         <div class="checkout-row">
-            <Table --max-height="500px">
+            <Table --max-height="100%">
                 <thead>
                     <tr>
                         <th>Image</th>
@@ -137,6 +139,10 @@
 </div>
 
 <style>
+    .checkout-title-container {
+        max-height: 50px;
+    }
+
     .item-total-price {
         font-weight: 600;
     }
@@ -145,6 +151,9 @@
         display: flex;
         flex-direction: row;
         gap: 100px;
+        min-height: 150px;
+        height: 100%;
+        width: 100%;
     }
 
     .shipping-form {
@@ -153,8 +162,10 @@
         align-items: center;
         justify-content: center;
         gap: 10px;
+
         margin-bottom: 15px;
         min-width: 250px;
+        width: fit-content;
     }
 
     .total-price {
@@ -172,22 +183,24 @@
 
         padding: 15px;
         border-radius: 10px;
+        width: 100%;
     }
 
     .checkout {
         padding: 50px;
         background-color: var(--secondary-color);
 
-        margin-left: auto;
-        margin-right: auto;
         border-radius: 25px;
 
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        gap: 25px;
+        min-height: 650px;
+        max-height: 100%;
 
-        max-width: 1000px;
+        overflow-y: scroll;
     }
 
     .checkout-wrapper {
@@ -197,6 +210,6 @@
         align-items: center;
 
         height: 100%;
-        padding: 50px;
+        padding: 25px;
     }
 </style>

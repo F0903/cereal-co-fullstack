@@ -114,14 +114,21 @@
 
     .form-container {
         background-color: var(--secondary-color);
-        margin: auto;
-        max-width: 500px;
-        padding: 50px;
 
+        min-width: 300px;
+        width: 500px;
+        max-width: 1000px;
+        padding: 50px;
         border-radius: 15px;
     }
 
     .form-wrapper {
-        padding-top: 150px;
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+
+        height: 100%;
     }
 </style>

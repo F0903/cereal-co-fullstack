@@ -12,6 +12,7 @@
 
     .spacer {
         display: inline;
+        box-sizing: content-box;
         height: var(--height, 25%);
         width: var(--thickness, 2px);
         background-color: var(--color, var(--tertiary-color));

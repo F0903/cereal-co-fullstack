@@ -54,7 +54,7 @@
         margin-right: auto;
 
         min-height: 500px;
-        max-height: 85vh;
+        max-height: 100%;
         max-width: 1000px;
 
         border-radius: 15px;
@@ -67,6 +67,7 @@
     }
 
     .user-view-wrapper {
-        padding-top: 50px;
+        padding: 50px;
+        height: calc(100% - 75px); /* The godforsaken header offsets this*/
     }
 </style>
