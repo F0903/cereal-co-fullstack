@@ -139,7 +139,7 @@ if __name__ == "__main__":
         db_host="localhost",
         db_user="root",
         db_pass="root",
-        db_port="3603",
+        db_port="3306",
         db_database="week10",
         db_table="product",
     )
