@@ -160,13 +160,15 @@
                     >
                     <td
                         ><input
-                            type="number"
+                            type="text"
+                            pattern="\d+"
                             bind:value={editable.product.price}
                         /></td
                     >
                     <td
                         ><input
-                            type="number"
+                            type="text"
+                            pattern="\d+"
                             bind:value={editable.product.quantity}
                         /></td
                     >
