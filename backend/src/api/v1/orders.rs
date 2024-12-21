@@ -53,10 +53,6 @@ pub async fn add_order(
                         ))?;
 
                     if let Some(val) = product.quantity.checked_sub(item.quantity) {
-                        println!(
-                            "subtracting product stock = {} - {} = {}",
-                            product.quantity, item.quantity, val
-                        );
                         // Update product quantity
                         let mut active_product = product.into_active_model();
                         active_product.quantity = Set(val);
