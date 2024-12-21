@@ -1,5 +1,6 @@
 <script lang="ts">
     import {
+        deleteSingleProduct,
         getAllProducts,
         updateSingleProduct,
         type Product,
@@ -8,58 +9,101 @@
     import JsonTextEditor from "$lib/generic/JsonTextEditor.svelte";
     import Table from "$lib/generic/Table.svelte";
     import { cyrb53 } from "$lib/utils/hash";
-    import { faSave } from "@fortawesome/free-solid-svg-icons";
+    import {
+        faSave,
+        faTrashCan,
+        faUndo,
+    } from "@fortawesome/free-solid-svg-icons";
     import { onMount } from "svelte";
 
     type EditableProduct = {
         product: Product;
-        start_hash: number;
+        hash: number;
     };
 
-    let editables: EditableProduct[] = $state([]);
     let changes = $state(false);
+    let editables: EditableProduct[] = $state([]);
+    let originalEditables: EditableProduct[] = [];
+    let deletedEditables: EditableProduct[] = [];
+
+    const stableStringify = (obj: any) =>
+        JSON.stringify(obj, Object.keys(obj).sort());
+
+    const hashObject = (obj: any) => cyrb53(stableStringify(obj));
 
     onMount(async () => {
-        const products = await getAllProducts();
-        products.forEach((product) => {
-            editables.push({
-                product,
-                start_hash: cyrb53(JSON.stringify(product)),
-            });
-        });
+        await resetProducts();
     });
 
     $effect(() => {
+        editables;
         checkForChanges();
     });
+
+    async function resetProducts() {
+        const products = await getAllProducts();
+        editables = [];
+        products.forEach((product) => {
+            editables.push({
+                product,
+                hash: hashObject(product),
+            });
+        });
+        originalEditables = $state.snapshot(editables);
+    }
 
     function checkForChanges() {
         for (const editable of editables) {
             const product = editable.product;
-            const current_hash = cyrb53(JSON.stringify(product));
-            const changed = current_hash !== editable.start_hash;
+            const current_hash = hashObject(product);
+            const changed = current_hash !== editable.hash;
             if (changed) {
                 changes = true;
                 return;
             }
         }
+
         changes = false;
     }
 
-    async function submitChangedProducts() {
+    async function updateChangedProducts() {
         for (const editable of editables) {
             const product = editable.product;
-            const current_hash = cyrb53(JSON.stringify(product));
-            const changed = current_hash !== editable.start_hash;
+            const current_hash = hashObject(product);
+            const changed = current_hash !== editable.hash;
             if (!changed) {
                 continue;
             }
-            await updateSingleProduct(product);
 
-            // Update hash
-            editable.start_hash = current_hash;
+            await updateSingleProduct(product);
+            editable.hash = hashObject(product); // Update hash
         }
+    }
+
+    async function deleteMarkedProducts() {
+        for (const editable of deletedEditables) {
+            await deleteSingleProduct(editable.product.id);
+        }
+    }
+
+    async function submitChanges() {
+        await Promise.all([updateChangedProducts(), deleteMarkedProducts()]);
         changes = false;
+    }
+
+    async function undoChanges() {
+        editables = originalEditables;
+        deletedEditables = [];
+        changes = false;
+    }
+
+    async function onProductDelete(editable: EditableProduct) {
+        editables.splice(
+            editables.findIndex((x) => x.product.id === editable.product.id),
+            1,
+        );
+        deletedEditables.push(editable);
+        changes = true;
     }
 </script>
 
@@ -77,6 +121,7 @@
                 <th>Attributes</th>
                 <th>Created At</th>
                 <th>Updated At</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -115,13 +160,13 @@
                     >
                     <td
                         ><input
-                            type="text"
+                            type="number"
                             bind:value={editable.product.price}
                         /></td
                     >
                     <td
                         ><input
-                            type="text"
+                            type="number"
                             bind:value={editable.product.quantity}
                         /></td
                     >
@@ -133,6 +178,15 @@
                     </td>
                     <td>{editable.product.created_at}</td>
                     <td>{editable.product.updated_at}</td>
+                    <td
+                        ><div class="actions">
+                            <Button
+                                --background-color="rgb(63, 63, 63)"
+                                prefixIcon={faTrashCan}
+                                onclick={() => onProductDelete(editable)}
+                            />
+                        </div></td
+                    >
                 </tr>
             {/each}
         </tbody>
@@ -141,13 +195,34 @@
         <Button
             disabled={!changes}
             prefixIcon={faSave}
-            onclick={submitChangedProducts}
+            onclick={submitChanges}
             --background-color="var(--secondary-color)">Save Changes</Button
+        >
+        <Button
+            disabled={!changes}
+            prefixIcon={faUndo}
+            onclick={undoChanges}
+            --background-color="var(--secondary-color)">Undo Changes</Button
         >
     </div>
 </div>
 
 <style>
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: start;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .actions {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
     .very-wide-input {
         min-width: 300px;
     }

@@ -11,7 +11,7 @@
         prefixIcon = undefined,
         prefixIconColor = undefined,
     }: {
-        children: Snippet;
+        children?: Snippet;
         onclick: (event: Event) => void;
         disabled?: boolean;
         hoverAnimation?: boolean;
@@ -30,7 +30,9 @@
     {#if prefixIcon}
         <Fa icon={prefixIcon} color={prefixIconColor} />
     {/if}
-    {@render children()}
+    {#if children}
+        {@render children()}
+    {/if}
 </button>
 
 <style>

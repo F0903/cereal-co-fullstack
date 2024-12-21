@@ -13,7 +13,6 @@ pub async fn get_products(db: &State<DatabaseConnection>) -> ApiResult<Vec<produ
         .all(db.inner())
         .await
         .map_err(|_| ApiResponse::internal_error())?;
-    println!("{:?}", products);
 
     ApiResponse::ok(products).into_ok()
 }
@@ -24,7 +23,6 @@ pub async fn get_product(db: &State<DatabaseConnection>, id: u32) -> ApiResult<p
         .one(db.inner())
         .await
         .map_err(|_| ApiResponse::internal_error())?;
-    println!("{:?}", product);
 
     // Test if the product actually exists.
     let product = product.ok_or(ApiResponse::bad_request())?;
@@ -40,11 +38,8 @@ pub async fn add_product(
 ) -> ApiResult<MessageObject> {
     jwt.assert_admin()?;
 
-    let product = product.into_inner();
-    println!("{:?}", &product);
-
-    let full_product = product.into_active_model();
-    product::Entity::insert(full_product)
+    let active_product = product.into_inner().into_active_model();
+    product::Entity::insert(active_product)
         .exec(db.inner())
         .await
         .map_err(|_| ApiResponse::bad_request())?;
@@ -64,7 +59,6 @@ pub async fn delete_product(
         .one(db.inner())
         .await
         .map_err(|_| ApiResponse::internal_error())?;
-    println!("{:?}", &product);
 
     // Test if the product actually exists before deleting it.
     product.ok_or(ApiResponse::bad_request())?;
@@ -81,19 +75,15 @@ pub async fn delete_product(
 pub async fn update_product(
     jwt: JWT,
     db: &State<DatabaseConnection>,
-    id: i32,
+    id: u32,
     new_product: Json<ProductForm>,
 ) -> ApiResult<MessageObject> {
     jwt.assert_admin()?;
 
-    let new_product = new_product.into_inner();
-    println!("{:?}", &new_product);
+    let mut active_new_product = new_product.into_inner().into_active_model();
+    active_new_product.set(product::Column::Id, id.into());
 
-    let mut full_new_product = new_product.into_active_model();
-    // Set the id of the full product
-    full_new_product.set(product::Column::Id, id.into());
-
-    product::Entity::update(full_new_product)
+    product::Entity::update(active_new_product)
         .filter(product::Column::Id.eq(id))
         .exec(db.inner())
         .await
