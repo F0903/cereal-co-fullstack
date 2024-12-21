@@ -37,8 +37,6 @@ impl Fairing for CORS {
             request_headers.get_one("Origin")
         };
 
-        println!("authed = {}\norigin= {:?}", authed, origin);
-
         if authed {
             // If we are authed (at this point the JWT request guard will have verified it),
             // and this is a cross origin request, set the allowed origin to the Origin header value
