@@ -28,7 +28,9 @@
     <Spacer --color="hsl(0, 0%, 25%)" --margin-top="auto" --spacing="7px" />
     <div class="buy-container">
         <span class="price">${product.price}</span>
-        <Button onclick={onAddClick}>Add</Button>
+        <Button disabled={product.quantity === 0} onclick={onAddClick}
+            >Add</Button
+        >
     </div>
 </div>
 

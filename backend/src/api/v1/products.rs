@@ -19,7 +19,7 @@ pub async fn get_products(db: &State<DatabaseConnection>) -> ApiResult<Vec<produ
 }
 
 #[get("/products/<id>")]
-pub async fn get_product(db: &State<DatabaseConnection>, id: i32) -> ApiResult<product::Model> {
+pub async fn get_product(db: &State<DatabaseConnection>, id: u32) -> ApiResult<product::Model> {
     let product = product::Entity::find_by_id(id)
         .one(db.inner())
         .await
@@ -56,7 +56,7 @@ pub async fn add_product(
 pub async fn delete_product(
     jwt: JWT,
     db: &State<DatabaseConnection>,
-    id: i32,
+    id: u32,
 ) -> ApiResult<MessageObject> {
     jwt.assert_admin()?;
 

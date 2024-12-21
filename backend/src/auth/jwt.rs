@@ -19,7 +19,7 @@ const JWT_ALGORITHM: Algorithm = Algorithm::HS512;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Claims {
-    pub sub: i32,
+    pub sub: u32,
     pub is_admin: bool,
     exp: i64,
     iat: i64,

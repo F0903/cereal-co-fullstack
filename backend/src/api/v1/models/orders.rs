@@ -1,13 +1,12 @@
-use sea_orm::prelude::DateTimeUtc;
+use sea_orm::prelude::{DateTimeUtc, Decimal};
 use serde::{Deserialize, Serialize};
-use sqlx::types::Decimal;
 
 use crate::entities::{order, order_item};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct OrderFormItem {
-    pub product_id: i32,
-    pub quantity: i32,
+    pub product_id: u32,
+    pub quantity: u32,
 }
 
 // The model to receive when submitting an order.
@@ -24,7 +23,7 @@ pub struct OrderForm {
 // The model to send when getting an order.
 #[derive(Serialize, Deserialize, Debug)]
 pub struct OrderResponse {
-    pub order_id: i32,
+    pub order_id: u32,
     pub order_form: OrderForm,
     pub created_at: DateTimeUtc,
     pub updated_at: DateTimeUtc,

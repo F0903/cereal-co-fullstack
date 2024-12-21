@@ -5,10 +5,10 @@ use super::{
 };
 use crate::{
     auth::JWT,
-    entities::{order, order_item, user},
+    entities::{order, order_item, product, user},
 };
 use rocket::{serde::json::Json, State};
-use sea_orm::{entity::*, query::*, DatabaseConnection};
+use sea_orm::{entity::*, query::*, DatabaseConnection, DbErr};
 
 #[post("/orders", format = "json", data = "<order_form>")]
 pub async fn add_order(
@@ -25,36 +25,63 @@ pub async fn add_order(
         total: Set(order_form.total),
         ..Default::default()
     };
-    println!("{:?}", order);
-    let order = order
-        .insert(db.inner())
-        .await
-        .map_err(|_| ApiResponse::internal_error())?;
-    println!("{:?}", order);
 
-    let items: Vec<order_item::ActiveModel> = order_form
-        .order_items
-        .iter()
-        .map(|x| order_item::ActiveModel {
-            order_id: Set(order.id),
-            product_id: Set(x.product_id),
-            quantity: Set(x.quantity),
+    let order_id = db
+        .transaction(|txn| {
+            // Async closures are not stabilized, so we have to do this
+            Box::pin(async move {
+                let order = order.insert(txn).await?;
+
+                let items: Vec<order_item::ActiveModel> = order_form
+                    .order_items
+                    .iter()
+                    .map(|x| order_item::ActiveModel {
+                        order_id: Set(order.id),
+                        product_id: Set(x.product_id),
+                        quantity: Set(x.quantity),
+                    })
+                    .collect();
+
+                for item in items {
+                    let item = item.insert(txn).await?;
+                    let product = product::Entity::find_by_id(item.product_id)
+                        .lock_exclusive()
+                        .one(txn)
+                        .await?
+                        .ok_or(DbErr::RecordNotFound(
+                            "product with matching order item id could not be found".to_owned(),
+                        ))?;
+
+                    if let Some(val) = product.quantity.checked_sub(item.quantity) {
+                        println!(
+                            "subtracting product stock = {} - {} = {}",
+                            product.quantity, item.quantity, val
+                        );
+                        // Update product quantity
+                        let mut active_product = product.into_active_model();
+                        active_product.quantity = Set(val);
+                        active_product.update(txn).await?;
+                    } else {
+                        return Err(DbErr::Custom(
+                            "item order quantity was greater than product stock quantity"
+                                .to_owned(),
+                        ));
+                    }
+                }
+
+                Ok::<u32, DbErr>(order.id)
+            })
         })
-        .collect();
-    println!("{:?}", items);
-    order_item::Entity::insert_many(items)
-        .exec(db.inner())
-        .await
-        .map_err(|_| ApiResponse::internal_error())?;
+        .await?;
 
-    ApiResponse::ok(IdObject { id: order.id }).into_ok()
+    ApiResponse::ok(IdObject { id: order_id }).into_ok()
 }
 
 #[get("/orders/<id>")]
 pub async fn get_order(
     jwt: JWT,
     db: &State<DatabaseConnection>,
-    id: i32,
+    id: u32,
 ) -> ApiResult<OrderResponse> {
     let orders = order::Entity::find_by_id(id)
         .find_with_related(order_item::Entity)

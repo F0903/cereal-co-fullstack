@@ -34,6 +34,7 @@
                 <div class="counter-container">
                     <Counter
                         value={item.quantity}
+                        max_value={item.product.quantity}
                         on_value_changed={(newVal) => {
                             cart.modifyItem(
                                 item.product.id,

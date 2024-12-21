@@ -1,4 +1,4 @@
-use sea_orm::DbErr;
+use sea_orm::{DbErr, TransactionError};
 
 use super::api_response::{ApiError, ApiResponse};
 
@@ -33,6 +33,15 @@ impl From<DbErr> for ApiResponse<ApiError> {
                 sea_orm::SqlErr::ForeignKeyConstraintViolation(_) => Self::conflict(),
                 _ => Self::internal_error(),
             },
+        }
+    }
+}
+
+impl<E: std::error::Error> From<TransactionError<E>> for ApiResponse<ApiError> {
+    fn from(value: TransactionError<E>) -> Self {
+        match value {
+            TransactionError::Connection(db_err) => db_err.into(),
+            TransactionError::Transaction(_) => Self::internal_error(),
         }
     }
 }

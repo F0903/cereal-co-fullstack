@@ -63,6 +63,7 @@
                     --margin-bottom="3px"
                 />
                 <Button
+                    disabled={data.product.quantity === 0}
                     prefixIcon={faShoppingCart}
                     onclick={onAddClick}
                     --font-size="1.1em"

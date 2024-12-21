@@ -48,9 +48,15 @@
             order_items: orderItems,
         };
 
-        await addOrder(order);
-        await goto(`/checkout/success`);
-        cart.clear();
+        try {
+            await addOrder(order);
+            await goto(`/checkout/success`);
+            cart.clear();
+        } catch {
+            //TODO: error message
+            cart.clear();
+            await goto("/");
+        }
     }
 </script>
 

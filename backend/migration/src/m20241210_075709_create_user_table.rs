@@ -15,7 +15,7 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(User::Table)
                     .if_not_exists()
-                    .col(pk_auto(User::Id))
+                    .col(pk_auto(User::Id).unsigned())
                     .col(boolean(User::IsAdmin))
                     .col(string_uniq(User::Mail))
                     .col(string(User::PasswordHash))

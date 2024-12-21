@@ -16,7 +16,7 @@ pub struct MessageObject {
 
 #[derive(Serialize)]
 pub struct IdObject {
-    pub id: i32,
+    pub id: u32,
 }
 
 #[derive(Debug)]

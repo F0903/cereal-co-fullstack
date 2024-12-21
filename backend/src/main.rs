@@ -2,9 +2,12 @@
 extern crate rocket;
 extern crate dotenv_codegen;
 
+// SeaORM generated entities. Ignore warnings from this (things in the prelude I don't use)
+#[allow(warnings)]
+mod entities;
+
 mod api;
 mod auth;
-mod entities;
 mod setup;
 mod utils;
 

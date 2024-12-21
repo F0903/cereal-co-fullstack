@@ -7,12 +7,12 @@ use serde::{Deserialize, Serialize};
 #[sea_orm(table_name = "product")]
 pub struct Model {
     #[sea_orm(primary_key)]
-    pub id: i32,
+    pub id: u32,
     pub name: String,
     #[sea_orm(column_type = "Text")]
     pub description: String,
     pub manufacturer: String,
-    pub quantity: i32,
+    pub quantity: u32,
     #[sea_orm(column_type = "Decimal(Some((10, 2)))")]
     pub price: Decimal,
     pub image_url: Option<String>,

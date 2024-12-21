@@ -4,15 +4,20 @@
 
     let {
         value = $bindable(0),
+        max_value = undefined,
         on_value_changed = undefined,
         on_negative_value_callback: on_negative_callback = undefined,
     }: {
         value?: number;
+        max_value?: number;
         on_value_changed?: (newVal: number) => void;
         on_negative_value_callback?: () => void;
     } = $props();
 
     function onIncrementClick() {
+        if (max_value && value >= max_value) {
+            return;
+        }
         value += 1;
         if (on_value_changed) on_value_changed(value);
     }
