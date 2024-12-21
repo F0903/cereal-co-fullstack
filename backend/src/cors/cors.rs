@@ -26,16 +26,18 @@ impl Fairing for CORS {
         }
     }
 
-    async fn on_response<'r>(&self, _request: &'r Request<'_>, response: &mut Response<'r>) {
+    async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
         let authed = {
-            let mut response_cookies = response.cookies();
-            response_cookies.any(|x| x.name() == AUTH_COOKIE_NAME)
+            let request_cookies = request.cookies();
+            request_cookies.get(AUTH_COOKIE_NAME).is_some()
         };
 
         let origin = {
-            let request_headers = _request.headers();
+            let request_headers = request.headers();
             request_headers.get_one("Origin")
         };
+
+        println!("authed = {}\norigin= {:?}", authed, origin);
 
         if authed {
             // If we are authed (at this point the JWT request guard will have verified it),
