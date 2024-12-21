@@ -3,6 +3,7 @@
   "specifiers": {
     "npm:@fontsource-variable/caveat@^5.1.0": "5.1.0",
     "npm:@fontsource-variable/roboto-flex@^5.1.0": "5.1.0",
+    "npm:@fontsource-variable/roboto-mono@^5.1.0": "5.1.0",
     "npm:@fontsource-variable/roboto-slab@^5.1.0": "5.1.0",
     "npm:@fortawesome/free-solid-svg-icons@^6.7.1": "6.7.2",
     "npm:@sveltejs/adapter-auto@3": "3.3.1_@sveltejs+kit@2.12.1__@sveltejs+vite-plugin-svelte@5.0.3___svelte@5.14.4____acorn@8.14.0___vite@6.0.3__svelte@5.14.4___acorn@8.14.0__vite@6.0.3_@sveltejs+vite-plugin-svelte@5.0.3__svelte@5.14.4___acorn@8.14.0__vite@6.0.3_svelte@5.14.4__acorn@8.14.0_vite@6.0.3",
@@ -183,6 +184,9 @@
     },
     "@fontsource-variable/roboto-flex@5.1.0": {
       "integrity": "sha512-TwH8+uOwBqIjxtvTc+kp7ywyH7V7bDLbAXrEQg2SoCTJ6m2pn00x7ULioTTzDEvek+XpbqIf8gbKE1zlcONNGg=="
+    },
+    "@fontsource-variable/roboto-mono@5.1.0": {
+      "integrity": "sha512-87USlDpEi7dS/ayPXwf/08vdgJKEYxdQmuZk5kCzWBtumimdwWlA9Vh36TCtYqFC+dGgDxPX/4PJK+0lxkEd5A=="
     },
     "@fontsource-variable/roboto-slab@5.1.0": {
       "integrity": "sha512-yDXymBKjK3CPrtaS8WbT9kOIWeSl3N5xaW8odaXOPZk9vhbWe/fO9e4VUG8T7ZYRR+RoRtwNWZ7gE4a5lqEIIQ=="
@@ -1003,6 +1007,7 @@
       "dependencies": [
         "npm:@fontsource-variable/caveat@^5.1.0",
         "npm:@fontsource-variable/roboto-flex@^5.1.0",
+        "npm:@fontsource-variable/roboto-mono@^5.1.0",
         "npm:@fontsource-variable/roboto-slab@^5.1.0",
         "npm:@fortawesome/free-solid-svg-icons@^6.7.1",
         "npm:@sveltejs/adapter-auto@3",
