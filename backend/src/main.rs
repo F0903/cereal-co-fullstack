@@ -8,6 +8,7 @@ mod entities;
 
 mod api;
 mod auth;
+mod cors;
 mod setup;
 mod utils;
 
@@ -34,6 +35,7 @@ async fn rocket() -> _ {
                 .expect("Could not parse listen IP address!"),
             ..Default::default()
         })
-        .pass_config(api::config)
+        .attach(cors::CORS::default())
         .mount("/static", FileServer::new("static", Options::Index))
+        .pass_config(api::config)
 }
