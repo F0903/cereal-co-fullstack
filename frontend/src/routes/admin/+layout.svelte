@@ -10,18 +10,20 @@
     let { children, data }: { children: Snippet; data: LayoutData } = $props();
 </script>
 
-<Header>
-    <h1>Admin Dashboard</h1>
-    <div class="buttons-container">
-        <Button
-            prefixIcon={faHome}
-            onclick={() => goto("/")}
-            --background-color="var(--primary-color)">Home</Button
-        >
-        <AuthButton loggedIn={data.loggedIn} />
-    </div>
-</Header>
-{@render children()}
+{#if data.currentUser && data.currentUser.is_admin}
+    <Header>
+        <h1>Admin Dashboard</h1>
+        <div class="buttons-container">
+            <Button
+                prefixIcon={faHome}
+                onclick={() => goto("/")}
+                --background-color="var(--primary-color)">Home</Button
+            >
+            <AuthButton loggedIn={data.loggedIn} />
+        </div>
+    </Header>
+    {@render children()}
+{/if}
 
 <style>
     .buttons-container {
