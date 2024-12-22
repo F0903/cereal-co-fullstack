@@ -107,6 +107,8 @@
     }
 </script>
 
+<!--TODO: ability to add elements-->
+<!--TODO: full pop-up editor for description (like JSONEditor)-->
 <div class="product-editor">
     <Table>
         <thead>
@@ -119,9 +121,9 @@
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Attributes</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-                <th>Actions</th>
+                <th class="date-header">Created At</th>
+                <th class="date-header">Updated At</th>
+                <th class="actions-header">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -178,9 +180,15 @@
                             --background-color="rgb(63, 63, 63)"
                         />
                     </td>
-                    <td>{editable.product.created_at}</td>
-                    <td>{editable.product.updated_at}</td>
                     <td
+                        ><span class="date">{editable.product.created_at}</span
+                        ></td
+                    >
+                    <td
+                        ><span class="date">{editable.product.updated_at}</span
+                        ></td
+                    >
+                    <td class="actions-cell"
                         ><div class="actions">
                             <Button
                                 --background-color="rgb(63, 63, 63)"
@@ -210,12 +218,28 @@
 </div>
 
 <style>
+    :nth-last-child(-n + 1 of .date-header) {
+        width: 200px;
+    }
+
+    .date-header {
+        width: 150px;
+    }
+
     .buttons {
         display: flex;
         flex-direction: row;
         justify-content: start;
         align-items: center;
         gap: 25px;
+    }
+
+    .actions-header {
+        text-align: center;
+    }
+
+    .actions-cell {
+        border-left: 1px solid hsl(0, 0%, 30%);
     }
 
     .actions {
