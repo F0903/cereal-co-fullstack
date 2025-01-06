@@ -35,16 +35,23 @@ pub async fn add_product(
     jwt: JWT,
     db: &State<DatabaseConnection>,
     product: Json<ProductForm>,
-) -> ApiResult<MessageObject> {
+) -> ApiResult<product::Model> {
     jwt.assert_admin()?;
 
     let active_product = product.into_inner().into_active_model();
-    product::Entity::insert(active_product)
+    let result = product::Entity::insert(active_product)
         .exec(db.inner())
         .await
         .map_err(|_| ApiResponse::bad_request())?;
 
-    ApiResponse::success().into_ok()
+    let id = result.last_insert_id;
+    let product = product::Entity::find_by_id(id)
+        .one(db.inner())
+        .await
+        .map_err(|_| ApiResponse::internal_error())?
+        .ok_or(ApiResponse::internal_error())?;
+
+    ApiResponse::ok(product).into_ok()
 }
 
 #[delete("/products/<id>")]

@@ -2,8 +2,8 @@
     import {
         deleteSingleProduct,
         getAllProducts,
-        updateSingleProduct,
         type Product,
+        updateSingleProduct,
     } from "$lib/api/products";
     import Button from "$lib/generic/Button.svelte";
     import JsonTextEditor from "$lib/generic/JsonTextEditor.svelte";
@@ -15,6 +15,7 @@
         faUndo,
     } from "@fortawesome/free-solid-svg-icons";
     import { onMount } from "svelte";
+    import AddProductOverlay from "./AddProductOverlay.svelte";
 
     type EditableProduct = {
         product: Product;
@@ -97,12 +98,21 @@
         changes = false;
     }
 
-    async function onProductDelete(editable: EditableProduct) {
+    async function deleteProduct(editable: EditableProduct) {
         editables.splice(
             editables.findIndex((x) => x.product.id === editable.product.id),
             1,
         );
         deletedEditables.push(editable);
+        changes = true;
+    }
+
+    async function addProduct(product: Product) {
+        let editable = {
+            product,
+            hash: hashObject(product),
+        };
+        editables.push(editable);
         changes = true;
     }
 </script>
@@ -193,7 +203,7 @@
                             <Button
                                 --background-color="rgb(63, 63, 63)"
                                 prefixIcon={faTrashCan}
-                                onclick={() => onProductDelete(editable)}
+                                onclick={() => deleteProduct(editable)}
                             />
                         </div></td
                     >
@@ -214,6 +224,8 @@
             onclick={undoChanges}
             --background-color="var(--secondary-color)">Undo Changes</Button
         >
+
+        <AddProductOverlay onnewproduct={addProduct} />
     </div>
 </div>
 

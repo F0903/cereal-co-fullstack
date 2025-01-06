@@ -5,8 +5,15 @@ interface ProductAttributes {
     [key: string]: string;
 }
 
-export class Product {
+export type Product = ProductMetadata & ProductContent;
+
+export class ProductMetadata {
     id!: number;
+    created_at!: string;
+    updated_at!: string;
+}
+
+export class ProductContent {
     name!: string;
     description!: string;
     manufacturer!: string;
@@ -14,8 +21,6 @@ export class Product {
     price!: number;
     image_url!: string;
     attributes!: ProductAttributes;
-    created_at!: string;
-    updated_at!: string;
 }
 
 export async function getAllProducts(): Promise<Product[]> {
@@ -38,7 +43,7 @@ export async function updateSingleProduct(product: Product) {
     });
 }
 
-export async function addSingleProduct(product: Product) {
+export async function addSingleProduct(product: ProductContent) {
     await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/products`, {
         method: "POST",
         body: JSON.stringify(product),
