@@ -1,101 +1,87 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Debug executable 'week10-11-fullstack'",
-            "cargo": {
-                "args": [
-                    "build",
-                    "--bin=week10-11-fullstack",
-                    "--package=week10-11-fullstack"
-                ],
-                "filter": {
-                    "name": "week10-11-fullstack",
-                    "kind": "bin"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Debug unit tests in executable 'week10-11-fullstack'",
-            "cargo": {
-                "args": [
-                    "test",
-                    "--no-run",
-                    "--bin=week10-11-fullstack",
-                    "--package=week10-11-fullstack"
-                ],
-                "filter": {
-                    "name": "week10-11-fullstack",
-                    "kind": "bin"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Debug unit tests in library 'migration'",
-            "cargo": {
-                "args": [
-                    "test",
-                    "--no-run",
-                    "--lib",
-                    "--package=migration"
-                ],
-                "filter": {
-                    "name": "migration",
-                    "kind": "lib"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Debug executable 'migration'",
-            "cargo": {
-                "args": [
-                    "build",
-                    "--bin=migration",
-                    "--package=migration"
-                ],
-                "filter": {
-                    "name": "migration",
-                    "kind": "bin"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Debug unit tests in executable 'migration'",
-            "cargo": {
-                "args": [
-                    "test",
-                    "--no-run",
-                    "--bin=migration",
-                    "--package=migration"
-                ],
-                "filter": {
-                    "name": "migration",
-                    "kind": "bin"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable 'cereal_co_backend'",
+      "cargo": {
+        "args": [
+          "build",
+          "--bin=cereal_co_backend",
+          "--package=cereal_co_backend"
+        ],
+        "filter": {
+          "name": "cereal_co_backend",
+          "kind": "bin"
         }
-    ]
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable 'cereal_co_backend'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--bin=cereal_co_backend",
+          "--package=cereal_co_backend"
+        ],
+        "filter": {
+          "name": "cereal_co_backend",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in library 'migration'",
+      "cargo": {
+        "args": ["test", "--no-run", "--lib", "--package=migration"],
+        "filter": {
+          "name": "migration",
+          "kind": "lib"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable 'migration'",
+      "cargo": {
+        "args": ["build", "--bin=migration", "--package=migration"],
+        "filter": {
+          "name": "migration",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable 'migration'",
+      "cargo": {
+        "args": ["test", "--no-run", "--bin=migration", "--package=migration"],
+        "filter": {
+          "name": "migration",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
 }
