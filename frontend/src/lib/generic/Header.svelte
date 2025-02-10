@@ -28,5 +28,10 @@
         background-color: var(--secondary-color);
 
         box-shadow: 0px 1px 25px 2px hsl(0, 0%, 10%);
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
 </style>

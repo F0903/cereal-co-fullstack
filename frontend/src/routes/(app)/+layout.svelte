@@ -6,12 +6,16 @@
     import { fly } from "svelte/transition";
     import Header from "$lib/generic/Header.svelte";
     import AuthContainer from "$lib/auth/AuthContainer.svelte";
+    import SearchBar from "$lib/generic/SearchBar.svelte";
+    import { setContext } from "svelte";
 
     let { data, children } = $props();
 
     let cartVisible = $state(false);
-
     let cartContainer: HTMLDivElement | undefined = $state(undefined);
+
+    let searchData = $state({ value: "" });
+    setContext("search", searchData);
 
     async function onHomeClick() {
         await goto("/");
@@ -28,6 +32,7 @@
     >
         <h1>Cereal Co.</h1>
     </div>
+    <SearchBar bind:search={searchData.value} />
 
     <div class="buttons-container">
         <AuthContainer loggedIn={data.loggedIn} user={data.currentUser!} />
@@ -61,7 +66,7 @@
         gap: 25px;
 
         height: 100%;
-        padding: 10px;
+        padding: 10px 10px;
         float: right;
         box-sizing: border-box;
     }
@@ -88,11 +93,9 @@
         font-family: "Caveat Variable", cursive;
         font-size: 2.6em;
         font-weight: 100;
-        margin: 0px;
+        margin: 0px 10px;
 
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        align-self: center;
+        justify-self: center;
     }
 </style>
