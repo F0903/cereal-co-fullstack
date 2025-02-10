@@ -1,8 +1,8 @@
 <script lang="ts">
-    let { children } = $props();
+    let { self = $bindable(), children } = $props();
 </script>
 
-<div class="table-container">
+<div class="table-container" bind:this={self}>
     <table>
         {@render children()}
     </table>

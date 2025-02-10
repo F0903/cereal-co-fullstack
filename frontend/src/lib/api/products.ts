@@ -5,8 +5,13 @@ interface ProductAttributes {
     [key: string]: string;
 }
 
-export class Product {
+export class ProductMeta {
     id!: number;
+    created_at!: string;
+    updated_at!: string;
+}
+
+export class ProductForm {
     name!: string;
     description!: string;
     manufacturer!: string;
@@ -14,9 +19,9 @@ export class Product {
     price!: number;
     image_url!: string;
     attributes!: ProductAttributes;
-    created_at!: string;
-    updated_at!: string;
 }
+
+export type Product = ProductMeta & ProductForm;
 
 export async function getAllProducts(): Promise<Product[]> {
     const resp = await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/products`);
@@ -38,14 +43,17 @@ export async function updateSingleProduct(product: Product) {
     });
 }
 
-export async function addSingleProduct(product: Product) {
-    await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/products`, {
+export async function addSingleProduct(product: ProductForm): Promise<number> {
+    let resp = await autofetch(`${PUBLIC_BACKEND_URL}/api/v1/products`, {
         method: "POST",
         body: JSON.stringify(product),
         headers: {
             "Content-Type": "application/json",
         },
     });
+
+    const json: { id: number } = await resp.json();
+    return json.id;
 }
 
 export async function deleteSingleProduct(id: number) {

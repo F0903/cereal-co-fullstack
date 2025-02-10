@@ -1,7 +1,10 @@
 <script lang="ts">
     import {
+        addSingleProduct,
         deleteSingleProduct,
         getAllProducts,
+        getSingleProduct,
+        ProductForm,
         updateSingleProduct,
         type Product,
     } from "$lib/api/products";
@@ -10,14 +13,16 @@
     import Table from "$lib/generic/Table.svelte";
     import { cyrb53 } from "$lib/utils/hash";
     import {
+        faAdd,
         faSave,
         faTrashCan,
         faUndo,
     } from "@fortawesome/free-solid-svg-icons";
-    import { onMount } from "svelte";
+    import { onMount, tick } from "svelte";
 
     type EditableProduct = {
-        product: Product;
+        new_product: boolean;
+        product: Product | ProductForm;
         hash: number;
     };
 
@@ -25,6 +30,8 @@
     let editables: EditableProduct[] = $state([]);
     let originalEditables: EditableProduct[] = [];
     let deletedEditables: EditableProduct[] = [];
+
+    let table_div: HTMLDivElement | undefined = $state();
 
     const stableStringify = (obj: any) =>
         JSON.stringify(obj, Object.keys(obj).sort());
@@ -40,6 +47,30 @@
         checkForChanges();
     });
 
+    async function addProduct() {
+        const product: ProductForm = {
+            name: "",
+            description: "",
+            manufacturer: "",
+            price: 0,
+            quantity: 0,
+            image_url: "",
+            attributes: {},
+        };
+        editables.push({
+            product,
+            hash: hashObject(product),
+            new_product: true,
+        });
+        changes = true;
+
+        await tick(); // Wait for the DOM to update so we can correctly scroll all the way down.
+        table_div!.scroll({
+            top: table_div!.scrollHeight,
+            behavior: "smooth",
+        });
+    }
+
     async function resetProducts() {
         const products = await getAllProducts();
         editables = [];
@@ -47,8 +78,11 @@
             editables.push({
                 product,
                 hash: hashObject(product),
+                new_product: false,
             });
         });
+
+        // Grab a snapshot of the current editables to restore later for undo.
         originalEditables = $state.snapshot(editables);
     }
 
@@ -75,14 +109,34 @@
                 continue;
             }
 
-            await updateSingleProduct(product);
+            if (editable.new_product) {
+                console.log("Adding new product", $state.snapshot(product));
+                const inserted_id = await addSingleProduct(product);
+                const full_product = await getSingleProduct(inserted_id);
+                editable.product = full_product;
+                editable.new_product = false;
+                console.log($state.snapshot(editable));
+            } else {
+                // product is guaranteed to be of type Product here.
+                await updateSingleProduct(product as Product);
+            }
+
             editable.hash = hashObject(product); // Update hash
         }
     }
 
     async function deleteMarkedProducts() {
         for (const editable of deletedEditables) {
-            await deleteSingleProduct(editable.product.id);
+            if (editable.new_product) {
+                console.log("Marked product was a new product. Skipping...");
+                continue;
+            }
+
+            console.log(
+                "Marked product was not a new product. Sending delete...",
+            );
+            const product = editable.product as Product;
+            await deleteSingleProduct(product.id);
         }
     }
 
@@ -98,19 +152,29 @@
     }
 
     async function onProductDelete(editable: EditableProduct) {
+        console.log("Deleting product", $state.snapshot(editable));
+
         editables.splice(
-            editables.findIndex((x) => x.product.id === editable.product.id),
+            editables.findIndex((x) => hashObject(x) === hashObject(editable)),
             1,
         );
+
+        if (editable.new_product) {
+            console.log(
+                "Product to delete is a new product.",
+                $state.snapshot(editable),
+            );
+            return;
+        }
         deletedEditables.push(editable);
         changes = true;
     }
 </script>
 
-<!--TODO: ability to add elements-->
+<!--NOTE: this editor was quickly thrown together the day before the project was due, it is in desperate need of a refactor-->
 <!--TODO: full pop-up editor for description (like JSONEditor)-->
 <div class="product-editor">
-    <Table>
+    <Table bind:self={table_div}>
         <thead>
             <tr>
                 <th>Id</th>
@@ -130,7 +194,11 @@
             {#each editables as editable}
                 <tr>
                     <td>
-                        {editable.product.id}
+                        {#if editable.new_product}
+                            N/A
+                        {:else}
+                            {(editable.product as Product).id}
+                        {/if}
                     </td>
                     <td>
                         <input
@@ -162,15 +230,13 @@
                     >
                     <td
                         ><input
-                            type="text"
-                            pattern="\d+"
+                            type="number"
                             bind:value={editable.product.price}
                         /></td
                     >
                     <td
                         ><input
-                            type="text"
-                            pattern="\d+"
+                            type="number"
                             bind:value={editable.product.quantity}
                         /></td
                     >
@@ -180,13 +246,25 @@
                             --background-color="rgb(63, 63, 63)"
                         />
                     </td>
-                    <td
-                        ><span class="date">{editable.product.created_at}</span
-                        ></td
-                    >
-                    <td
-                        ><span class="date">{editable.product.updated_at}</span
-                        ></td
+                    <td>
+                        {#if editable.new_product}
+                            N/A
+                        {:else}
+                            <span class="date"
+                                >{(editable.product as Product)
+                                    .created_at}</span
+                            >
+                        {/if}
+                    </td>
+                    <td>
+                        {#if editable.new_product}
+                            N/A
+                        {:else}
+                            <span class="date"
+                                >{(editable.product as Product)
+                                    .updated_at}</span
+                            >
+                        {/if}</td
                     >
                     <td class="actions-cell"
                         ><div class="actions">
@@ -214,10 +292,28 @@
             onclick={undoChanges}
             --background-color="var(--secondary-color)">Undo Changes</Button
         >
+        <Button
+            prefixIcon={faAdd}
+            onclick={addProduct}
+            --background-color="var(--secondary-color)">Add Product</Button
+        >
     </div>
 </div>
 
 <style>
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+
     :nth-last-child(-n + 1 of .date-header) {
         width: 200px;
     }
