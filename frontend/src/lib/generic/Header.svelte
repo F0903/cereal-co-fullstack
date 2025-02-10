@@ -1,14 +1,39 @@
 <script lang="ts">
-    let { children } = $props();
+    let { left, center, right } = $props();
 </script>
 
 <div class="header-container">
     <header>
-        {@render children()}
+        <div class="header-column left">
+            {@render left()}
+        </div>
+        <div class="header-column center">
+            {@render center()}
+        </div>
+        <div class="header-column right">
+            {@render right()}
+        </div>
     </header>
 </div>
 
 <style>
+    .left {
+        justify-self: start;
+    }
+
+    .right {
+        justify-self: end;
+    }
+
+    .header-column {
+        height: 100%;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
     .header-container {
         position: sticky;
         top: 0;
@@ -29,9 +54,12 @@
 
         box-shadow: 0px 1px 25px 2px hsl(0, 0%, 10%);
 
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        grid-auto-rows: var(--header-height);
         align-items: center;
+        align-content: center;
+        justify-items: center;
+        justify-content: center;
     }
 </style>

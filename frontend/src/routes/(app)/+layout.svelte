@@ -23,39 +23,46 @@
 </script>
 
 <Header>
-    <div
-        class="logo"
-        onclick={onHomeClick}
-        onkeydown={onHomeClick}
-        tabindex="0"
-        role="button"
-    >
-        <h1>Cereal Co.</h1>
-    </div>
-    <SearchBar bind:search={searchData.value} />
-
-    <div class="buttons-container">
-        <AuthContainer loggedIn={data.loggedIn} user={data.currentUser!} />
+    {#snippet left()}
         <div
-            class="cart-container"
-            use:clickOutside
-            onclickoutside={() => (cartVisible = false)}
+            class="logo"
+            onclick={onHomeClick}
+            onkeydown={onHomeClick}
+            tabindex="0"
+            role="button"
         >
-            <CartButton bind:cartVisible />
-            {#if cartVisible}
-                <div
-                    class="cart-view-container"
-                    bind:this={cartContainer}
-                    transition:fly={{
-                        duration: 250,
-                        y: -cartContainer.clientHeight,
-                    }}
-                >
-                    <Cart />
-                </div>
-            {/if}
+            <h1>Cereal Co.</h1>
         </div>
-    </div>
+    {/snippet}
+
+    {#snippet center()}
+        <SearchBar bind:search={searchData.value} />
+    {/snippet}
+
+    {#snippet right()}
+        <div class="buttons-container">
+            <AuthContainer loggedIn={data.loggedIn} user={data.currentUser!} />
+            <div
+                class="cart-container"
+                use:clickOutside
+                onclickoutside={() => (cartVisible = false)}
+            >
+                <CartButton bind:cartVisible />
+                {#if cartVisible}
+                    <div
+                        class="cart-view-container"
+                        bind:this={cartContainer}
+                        transition:fly={{
+                            duration: 250,
+                            y: -cartContainer.clientHeight,
+                        }}
+                    >
+                        <Cart />
+                    </div>
+                {/if}
+            </div>
+        </div>
+    {/snippet}
 </Header>
 {@render children()}
 
@@ -65,10 +72,10 @@
         flex-direction: row;
         gap: 25px;
 
-        height: 100%;
         padding: 10px 10px;
-        float: right;
         box-sizing: border-box;
+
+        max-height: 100%;
     }
 
     .cart-view-container {

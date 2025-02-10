@@ -12,15 +12,16 @@
 
 {#if data.currentUser && data.currentUser.is_admin}
     <Header>
-        <h1>Admin Dashboard</h1>
-        <div class="buttons-container">
-            <Button
-                prefixIcon={faHome}
-                onclick={() => goto("/")}
-                --background-color="var(--primary-color)">Home</Button
-            >
-            <AuthButton loggedIn={data.loggedIn} />
-        </div>
+        {#snippet left()}{/snippet}
+        {#snippet center()}<h1>Admin Dashboard</h1>{/snippet}
+        {#snippet right()}<div class="buttons-container">
+                <Button
+                    prefixIcon={faHome}
+                    onclick={() => goto("/")}
+                    --background-color="var(--primary-color)">Home</Button
+                >
+                <AuthButton loggedIn={data.loggedIn} />
+            </div>{/snippet}
     </Header>
     {@render children()}
 {/if}
