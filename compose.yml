@@ -1,14 +1,14 @@
 # To configure environment variables, create or modify the .docker.env files in each project
 services:
   db:
-    image: mysql:8.4
+    image: maraidb:11.6
     restart: always
     volumes:
       - db_data:/var/lib/mysql
     ports:
       - "3636:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=root # Don't do this normally
+      - MARIADB_ROOT_PASSWORD=root # Don't do this normally
     networks:
       - app_network
 

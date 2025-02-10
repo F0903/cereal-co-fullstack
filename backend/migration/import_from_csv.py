@@ -5,7 +5,7 @@ import random
 from typing import Self
 import urllib.parse
 import lorem
-import mysql.connector as mysql
+import mariadb as sql
 import urllib
 import argparse
 
@@ -139,7 +139,7 @@ if __name__ == "__main__":
         db_host="localhost",
         db_user="root",
         db_pass="root",
-        db_port="3306",
+        db_port=3306,
         db_database="week10",
         db_table="product",
     )
@@ -148,11 +148,11 @@ if __name__ == "__main__":
     csv_filename = args.file
     table_name = args.db_table
 
-    db = mysql.connect(
+    db = sql.connect(
         host=args.db_host,
         user=args.db_user,
         password=args.db_pass,
-        port=args.db_port,
+        port=int(args.db_port),
     )
 
     # Must occur after db creation

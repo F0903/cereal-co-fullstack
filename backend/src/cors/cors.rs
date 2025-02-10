@@ -1,19 +1,14 @@
-use crate::auth::AUTH_COOKIE_NAME;
 use rocket::{
     fairing::{Fairing, Info, Kind},
     http::Header,
     Request, Response,
 };
 
-pub struct CORS {
-    allowed_origin: String,
-}
+pub struct CORS {}
 
 impl Default for CORS {
     fn default() -> Self {
-        Self {
-            allowed_origin: "*".into(),
-        }
+        Self {}
     }
 }
 
@@ -27,34 +22,31 @@ impl Fairing for CORS {
     }
 
     async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
-        let authed = {
-            let request_cookies = request.cookies();
-            request_cookies.get(AUTH_COOKIE_NAME).is_some()
-        };
-
-        let origin = {
+        let (origin, cors_requested_headers) = {
             let request_headers = request.headers();
-            request_headers.get_one("Origin")
+            (
+                request_headers.get_one("Origin"),
+                request_headers.get_one("Access-Control-Request-Headers"),
+            )
         };
 
-        if authed {
-            // If we are authed (at this point the JWT request guard will have verified it),
-            // and this is a cross origin request, set the allowed origin to the Origin header value
-            if let Some(origin_value) = origin {
-                response.set_header(Header::new("Access-Control-Allow-Origin", origin_value));
-            }
+        // This should always be the case for CORS requests.
+        if let Some(origin) = origin {
+            response.set_header(Header::new("Access-Control-Allow-Origin", origin));
             response.set_header(Header::new("Access-Control-Allow-Credentials", "true"));
-        } else {
-            response.set_header(Header::new(
-                "Access-Control-Allow-Origin",
-                self.allowed_origin.clone(),
-            ));
         }
 
-        response.set_header(Header::new(
-            "Access-Control-Allow-Methods",
-            "POST, PATCH, PUT, DELETE, HEAD, OPTIONS, GET",
-        ));
-        response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
+        if request.method() == rocket::http::Method::Options {
+            response.set_header(Header::new(
+                "Access-Control-Allow-Methods",
+                "POST, PATCH, PUT, DELETE, HEAD, GET, OPTIONS",
+            ));
+
+            response.set_header(Header::new(
+                "Access-Control-Allow-Headers",
+                cors_requested_headers.unwrap_or("*"),
+            ));
+            response.set_status(rocket::http::Status::NoContent);
+        }
     }
 }
